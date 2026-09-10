@@ -11,7 +11,7 @@
     <meta name="author" content="TLNB Services LLP" />
     <link rel="canonical" href="https://ecoverseearth.com/" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <meta name="theme-color" content="#12372a" />
+    <meta name="theme-color" content="#071a12" />
     <meta property="og:site_name" content="Ecoverse" />
     <meta property="og:url" content="https://ecoverseearth.com/" />
     <meta property="og:title" content="Ecoverse | Verified Sustainability Impact by TLNB" />
@@ -42,7 +42,11 @@
       rel="stylesheet"
     />
     <script src="https://unpkg.com/lucide@latest" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.min.js" defer></script>
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="home.css" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -73,7 +77,10 @@
       }
     </script>
   </head>
-  <body>
+  <body class="home">
+    <div class="cursor-dot" aria-hidden="true"></div>
+    <div class="cursor-ring" aria-hidden="true"></div>
+
     <header class="site-header">
       <a class="brand" href="https://www.tlnb.in/" aria-label="TLNB parent site">
         <span class="brand-mark">TLNB</span>
@@ -88,17 +95,11 @@
     </header>
 
     <main>
-      <section class="hero" id="top">
-        <img
-          class="hero-image"
-          src="https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?q=85&w=2200&auto=format&fit=crop"
-          alt="Sunlight entering a green forest"
-        />
-        <div class="hero-shade"></div>
-        <div class="hero-content">
-          <p class="eyebrow">
-            World Environment Day Launch - June 5
-          </p>
+      <section class="cine-hero" id="top">
+        <canvas id="particle-field" aria-hidden="true"></canvas>
+        <div class="cine-hero-shade" aria-hidden="true"></div>
+        <div class="cine-hero-content">
+          <p class="eyebrow">World Environment Day Launch - June 5</p>
           <h1>Introducing Ecoverse to the world.</h1>
           <p class="hero-copy">
             A TLNB venture that turns everyday environmental action into
@@ -115,54 +116,149 @@
               Visit TLNB
             </a>
           </div>
+          <aside class="cine-launch-panel" aria-label="Ecoverse launch summary">
+            <span class="panel-kicker">Flagship Venture</span>
+            <strong>Not another eco app. An impact engine.</strong>
+            <p>
+              Every verified action becomes part of something bigger than
+              one person's habit — a growing, trusted record of real-world
+              change.
+            </p>
+          </aside>
         </div>
-        <aside class="launch-panel" aria-label="Ecoverse launch summary">
-          <span class="panel-kicker">Flagship Venture</span>
-          <strong>Not another eco app. An impact engine.</strong>
-          <p>
-            Every verified action becomes part of something bigger than one
-            person's habit — a growing, trusted record of real-world change.
-          </p>
-        </aside>
+        <div class="scroll-cue" aria-hidden="true">
+          <span>Scroll</span>
+          <span class="scroll-cue-line"></span>
+        </div>
       </section>
 
-      <section class="explore-section" aria-label="Explore Ecoverse">
-        <div class="explore-intro">
-          <p class="section-label">Explore</p>
-          <h2>Four ways into the story.</h2>
+      <section class="cine-morph" aria-label="Ecoverse in one line">
+        <div class="cine-morph-inner">
+          <p class="morph-line morph-out">Not another eco app.</p>
+          <p class="morph-line morph-in">An <strong>impact engine.</strong></p>
         </div>
-        <div class="explore-grid">
-          <a class="explore-card" href="about.html">
-            <i data-lucide="sprout"></i>
-            <h3>About Ecoverse</h3>
-            <p>Why we exist, and what the platform actually does.</p>
+      </section>
+
+      <section class="cine-section cine-problem" aria-label="The problem">
+        <div class="cine-problem-copy">
+          <p class="cine-eyebrow">The Problem</p>
+          <h2>Good intentions aren't enough.</h2>
+          <p>
+            Real environmental work happens on the ground, but it rarely
+            turns into something the people who need it can trust or find.
+          </p>
+        </div>
+        <p class="cine-problem-mark" aria-hidden="true">?</p>
+      </section>
+
+      <section class="cine-journey-pin" aria-label="How Ecoverse works">
+        <div class="cine-journey-viewport">
+          <div class="cine-journey-head">
+            <p class="cine-eyebrow">How It Works</p>
+            <h2>Four steps turn a habit into something durable.</h2>
+          </div>
+          <ol class="cine-journey-track">
+            <li class="journey-card">
+              <span class="journey-index">01 — Act</span>
+              <h3>Act</h3>
+              <p>
+                Recycle, cut waste, restore land, choose lower-carbon
+                options — the everyday actions that already matter.
+              </p>
+            </li>
+            <li class="journey-card">
+              <span class="journey-index">02 — Verify</span>
+              <h3>Verify</h3>
+              <p>
+                AI and real-world data confirm the action actually
+                happened — no self-reported guesswork.
+              </p>
+            </li>
+            <li class="journey-card">
+              <span class="journey-index">03 — Record</span>
+              <h3>Record</h3>
+              <p>
+                Verified impact is logged permanently, building a record
+                that can be trusted by anyone who looks at it.
+              </p>
+            </li>
+            <li class="journey-card">
+              <span class="journey-index">04 — Reward</span>
+              <h3>Reward</h3>
+              <p>
+                The people creating real impact earn real value — and
+                that value keeps compounding.
+              </p>
+            </li>
+          </ol>
+          <div class="cine-journey-progress" aria-hidden="true">
+            <div class="cine-journey-progress-bar"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="cine-section alt cine-impact" aria-label="The impact engine">
+        <div class="cine-impact-copy">
+          <p class="cine-eyebrow">The Impact Engine</p>
+          <h2>One verified action at a time, building something nobody can fake.</h2>
+          <p>
+            Ecoverse is TLNB Services LLP's flagship venture for turning
+            everyday environmental responsibility into a permanent,
+            verifiable record — closing the loop between real-world
+            action and real-world value, for everyone with a stake in
+            the outcome.
+          </p>
+          <p class="cine-impact-quote">
+            Ecoverse is the layer in between — quietly making sure value
+            flows the right direction.
+          </p>
+        </div>
+        <canvas id="impact-orbit" aria-hidden="true"></canvas>
+      </section>
+
+      <section class="cine-section" aria-label="Explore Ecoverse">
+        <p class="cine-eyebrow">Explore</p>
+        <h2>Four ways into the story.</h2>
+        <div class="cine-explore-grid">
+          <a class="cine-explore-card" href="about.html">
+            <span class="cine-explore-index">01</span>
+            <div>
+              <h3>About Ecoverse</h3>
+              <p>Why we exist, and what the platform actually does.</p>
+            </div>
             <span class="article-link">
               Learn more
               <i data-lucide="arrow-right"></i>
             </span>
           </a>
-          <a class="explore-card" href="approach.html">
-            <i data-lucide="workflow"></i>
-            <h3>Our Approach</h3>
-            <p>How verification works, and who it connects.</p>
+          <a class="cine-explore-card" href="approach.html">
+            <span class="cine-explore-index">02</span>
+            <div>
+              <h3>Our Approach</h3>
+              <p>How verification works, and who it connects.</p>
+            </div>
             <span class="article-link">
               See how
               <i data-lucide="arrow-right"></i>
             </span>
           </a>
-          <a class="explore-card" href="articles/index.html">
-            <i data-lucide="book-open"></i>
-            <h3>The Journal</h3>
-            <p>Field notes on the problems we're actually solving.</p>
+          <a class="cine-explore-card" href="articles/index.html">
+            <span class="cine-explore-index">03</span>
+            <div>
+              <h3>The Journal</h3>
+              <p>Field notes on the problems we're actually solving.</p>
+            </div>
             <span class="article-link">
               Start reading
               <i data-lucide="arrow-right"></i>
             </span>
           </a>
-          <a class="explore-card" href="connect.html">
-            <i data-lucide="handshake"></i>
-            <h3>Connect</h3>
-            <p>Partner with us, or just say hello.</p>
+          <a class="cine-explore-card" href="connect.html">
+            <span class="cine-explore-index">04</span>
+            <div>
+              <h3>Connect</h3>
+              <p>Partner with us, or just say hello.</p>
+            </div>
             <span class="article-link">
               Get in touch
               <i data-lucide="arrow-right"></i>
@@ -170,23 +266,57 @@
           </a>
         </div>
       </section>
+
+      <section class="cine-section alt cine-partners" aria-label="Partnerships">
+        <p class="cine-eyebrow">Ecosystem</p>
+        <h2>Building the network behind the record.</h2>
+        <div class="cine-partners-placeholder">
+          <strong>Partnerships — Coming Soon</strong>
+          Ecoverse is early. Partner organizations and collaborators will
+          be featured here as they join. If that's you, we'd love to
+          hear from you first.
+        </div>
+      </section>
+
+      <section class="cine-section cine-cta" aria-label="Join Ecoverse">
+        <h2>Join the Ecoverse.</h2>
+        <p>
+          A TLNB venture that turns everyday environmental action into
+          something real — verified, recorded, rewarded, and built to
+          last far beyond a single good habit.
+        </p>
+        <div class="cta-actions">
+          <a class="button dark primary" href="connect.html">
+            <i data-lucide="leaf"></i>
+            Join the Ecoverse
+          </a>
+          <a class="button dark secondary" href="articles/index.html">
+            <i data-lucide="book-open"></i>
+            Read the Journal
+          </a>
+        </div>
+      </section>
     </main>
 
     <footer class="site-footer">
-      <span>© 2026 Ecoverse Earth · A TLNB Services LLP venture. All rights reserved.</span>
-      <div class="footer-links">
-        <a href="https://instagram.com/ecoverse.earth.official" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <rect x="2" y="2" width="20" height="20" rx="5"></rect>
-            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-          </svg>
-          <span class="sr-only">Instagram</span>
-        </a>
-        <a href="https://www.tlnb.in/">tlnb.in</a>
+      <p class="footer-tagline">Every action leaves a trace.</p>
+      <div class="footer-bottom">
+        <span>© 2026 Ecoverse Earth · A TLNB Services LLP venture. All rights reserved.</span>
+        <div class="footer-links">
+          <a href="https://instagram.com/ecoverse.earth.official" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="2" y="2" width="20" height="20" rx="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            </svg>
+            <span class="sr-only">Instagram</span>
+          </a>
+          <a href="https://www.tlnb.in/">tlnb.in</a>
+        </div>
       </div>
     </footer>
 
     <script src="script.js"></script>
+    <script src="home.js"></script>
   </body>
 </html>

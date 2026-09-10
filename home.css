@@ -1,0 +1,593 @@
+/* ============================================================
+   Cinematic homepage styles — additive, index.html only.
+   Built on top of styles.css; uses the --deep-forest / --eco-electric
+   palette tokens defined there. Nothing here touches shared classes
+   used by about/approach/connect/articles.
+   ============================================================ */
+
+body.home {
+  background: var(--almost-black);
+  overflow-x: hidden;
+}
+
+/* ---------- custom cursor ---------- */
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  pointer-events: none;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  will-change: transform;
+}
+
+.cursor-dot {
+  width: 7px;
+  height: 7px;
+  background: var(--eco-electric);
+}
+
+.cursor-ring {
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(139, 226, 138, 0.55);
+  transition: width 0.25s ease, height 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+}
+
+.cursor-ring.is-active {
+  width: 56px;
+  height: 56px;
+  background: rgba(139, 226, 138, 0.12);
+  border-color: var(--eco-electric);
+}
+
+@media (hover: none), (pointer: coarse) {
+  .cursor-dot,
+  .cursor-ring {
+    display: none;
+  }
+}
+
+body.no-custom-cursor .cursor-dot,
+body.no-custom-cursor .cursor-ring {
+  display: none;
+}
+
+/* ---------- nav scroll state ---------- */
+.home .site-header {
+  background: linear-gradient(to bottom, rgba(5, 8, 6, 0.65), transparent);
+  transition: background 0.4s ease, backdrop-filter 0.4s ease, box-shadow 0.4s ease;
+}
+
+.home .site-header.is-scrolled {
+  background: rgba(5, 8, 6, 0.82);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 1px 0 rgba(139, 226, 138, 0.1);
+}
+
+/* ---------- cinematic hero ---------- */
+.cine-hero {
+  position: relative;
+  min-height: 100vh;
+  display: grid;
+  align-items: end;
+  padding: 120px clamp(18px, 5vw, 64px) 64px;
+  color: var(--warm-white);
+  overflow: hidden;
+  background: radial-gradient(120% 90% at 50% 0%, var(--dark-moss) 0%, var(--deep-forest) 46%, var(--almost-black) 100%);
+}
+
+#particle-field {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.cine-hero-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(5, 8, 6, 0.92) 0%, rgba(5, 8, 6, 0.15) 46%, rgba(5, 8, 6, 0.55) 100%);
+  pointer-events: none;
+}
+
+.cine-hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 900px;
+}
+
+.cine-hero .eyebrow {
+  color: var(--eco-electric);
+}
+
+.cine-hero h1 {
+  color: var(--warm-white);
+  font-size: clamp(3rem, 8vw, 7rem);
+}
+
+.cine-hero .hero-copy {
+  color: var(--soft-sage);
+  max-width: 640px;
+}
+
+.cine-launch-panel {
+  position: relative;
+  z-index: 2;
+  margin-top: 40px;
+  width: min(380px, 100%);
+  padding: 22px;
+  border-radius: 10px;
+  border: 1px solid rgba(139, 226, 138, 0.22);
+  background: rgba(16, 43, 30, 0.55);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 22px 70px rgba(3, 10, 6, 0.5);
+}
+
+.cine-launch-panel .panel-kicker {
+  color: var(--eco-electric);
+}
+
+.cine-launch-panel strong {
+  display: block;
+  font-family: "Lora", Georgia, serif;
+  font-size: 1.4rem;
+  line-height: 1.25;
+  color: var(--warm-white);
+}
+
+.cine-launch-panel p {
+  margin: 12px 0 0;
+  line-height: 1.6;
+  color: var(--soft-sage);
+}
+
+.scroll-cue {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--soft-sage);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+.scroll-cue-line {
+  width: 1px;
+  height: 34px;
+  background: linear-gradient(to bottom, var(--eco-electric), transparent);
+  animation: scroll-cue-drift 2.2s ease-in-out infinite;
+}
+
+@keyframes scroll-cue-drift {
+  0%, 100% { transform: scaleY(0.6); opacity: 0.4; }
+  50% { transform: scaleY(1); opacity: 1; }
+}
+
+/* ---------- shared cinematic section scaffolding ---------- */
+.cine-section {
+  position: relative;
+  padding: clamp(90px, 14vw, 200px) clamp(18px, 5vw, 64px);
+  background: var(--deep-forest);
+  color: var(--warm-white);
+}
+
+.cine-section.alt {
+  background: var(--almost-black);
+}
+
+.cine-eyebrow {
+  margin: 0 0 20px;
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--eco-electric);
+}
+
+/* ---------- morph section ---------- */
+.cine-morph {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+
+.cine-morph-inner {
+  max-width: 900px;
+}
+
+.morph-line {
+  margin: 0;
+  font-family: "Lora", Georgia, serif;
+  font-size: clamp(2.2rem, 6vw, 4.4rem);
+  line-height: 1.18;
+  color: var(--soft-sage);
+}
+
+.morph-line.morph-out {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.cine-morph-inner {
+  position: relative;
+  min-height: clamp(220px, 30vw, 340px);
+  display: grid;
+  place-items: center;
+}
+
+.morph-line.morph-in {
+  color: var(--warm-white);
+  font-weight: 700;
+}
+
+.morph-line.morph-in strong {
+  color: var(--eco-electric);
+}
+
+/* ---------- problem section ---------- */
+.cine-problem {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.8fr);
+  gap: clamp(32px, 6vw, 80px);
+  align-items: center;
+}
+
+.cine-problem h2 {
+  color: var(--warm-white);
+  font-size: clamp(2.4rem, 5vw, 4rem);
+}
+
+.cine-problem-copy p {
+  margin: 22px 0 0;
+  font-size: 1.1rem;
+  line-height: 1.85;
+  color: var(--soft-sage);
+  max-width: 560px;
+}
+
+.cine-problem-mark {
+  justify-self: end;
+  font-family: "Lora", Georgia, serif;
+  font-size: clamp(5rem, 12vw, 10rem);
+  line-height: 1;
+  color: rgba(139, 226, 138, 0.14);
+  user-select: none;
+}
+
+/* ---------- journey ----------
+   Default state (below) is a plain horizontally-scrollable track — fully
+   usable with no JS at all. When home.js confirms GSAP + ScrollTrigger
+   actually loaded, it adds .js-pinned-journey to the wrapper, which is
+   what turns this into the pinned/scrubbed cinematic version. Without
+   that class, .cine-journey-pin never gets its tall scroll-driver height
+   and the track keeps native overflow-x scrolling instead of relying on
+   a transform only JS would ever apply. */
+.cine-journey-pin {
+  position: relative;
+  background: var(--deep-forest);
+  padding: clamp(64px, 9vw, 100px) 0;
+}
+
+.cine-journey-viewport {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--deep-forest);
+}
+
+.cine-journey-head {
+  padding: 0 clamp(18px, 5vw, 64px);
+  margin-bottom: clamp(24px, 5vw, 56px);
+}
+
+.cine-journey-head h2 {
+  color: var(--warm-white);
+  font-size: clamp(2.1rem, 4.4vw, 3.6rem);
+}
+
+.cine-journey-track {
+  display: flex;
+  gap: clamp(20px, 4vw, 48px);
+  padding: 0 clamp(18px, 5vw, 64px) 12px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+}
+
+.journey-card {
+  scroll-snap-align: start;
+}
+
+.js-pinned-journey.cine-journey-pin {
+  height: 420vh;
+  padding: 0;
+}
+
+.js-pinned-journey .cine-journey-viewport {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.js-pinned-journey .cine-journey-track {
+  overflow-x: visible;
+  will-change: transform;
+}
+
+.journey-card {
+  flex: 0 0 min(78vw, 480px);
+  padding: clamp(28px, 3.6vw, 44px);
+  border-radius: 14px;
+  border: 1px solid rgba(139, 226, 138, 0.16);
+  background: linear-gradient(160deg, rgba(16, 43, 30, 0.7), rgba(5, 8, 6, 0.55));
+}
+
+.journey-index {
+  display: block;
+  margin-bottom: 22px;
+  font-family: "Lora", Georgia, serif;
+  font-size: 1.1rem;
+  color: var(--eco-electric);
+}
+
+.journey-card h3 {
+  font-family: "Lora", Georgia, serif;
+  font-size: clamp(1.6rem, 2.4vw, 2.2rem);
+  color: var(--warm-white);
+  margin: 0 0 16px;
+}
+
+.journey-card p {
+  margin: 0;
+  color: var(--soft-sage);
+  line-height: 1.75;
+  font-size: 1.02rem;
+}
+
+.cine-journey-progress {
+  margin: clamp(24px, 5vw, 48px) clamp(18px, 5vw, 64px) 0;
+  height: 2px;
+  background: rgba(139, 226, 138, 0.16);
+}
+
+.cine-journey-progress-bar {
+  height: 100%;
+  width: 0%;
+  background: var(--eco-electric);
+  transform-origin: left;
+}
+
+/* ---------- impact visualization ---------- */
+.cine-impact {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1fr);
+  gap: clamp(32px, 6vw, 80px);
+  align-items: center;
+}
+
+.cine-impact-copy h2 {
+  color: var(--warm-white);
+  font-size: clamp(2.2rem, 4.6vw, 3.6rem);
+}
+
+.cine-impact-copy p {
+  margin: 22px 0 0;
+  color: var(--soft-sage);
+  line-height: 1.85;
+  font-size: 1.08rem;
+  max-width: 520px;
+}
+
+.cine-impact-quote {
+  margin: 26px 0 0;
+  padding: 4px 0 4px 20px;
+  border-left: 2px solid var(--eco-electric);
+  font-family: "Lora", Georgia, serif;
+  font-style: italic;
+  font-size: 1.2rem;
+  color: var(--warm-white);
+}
+
+#impact-orbit {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  max-width: 520px;
+  justify-self: center;
+  display: block;
+}
+
+/* ---------- explore panels (upgraded) ---------- */
+.cine-explore-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  margin-top: clamp(36px, 6vw, 64px);
+  background: rgba(139, 226, 138, 0.14);
+  border: 1px solid rgba(139, 226, 138, 0.14);
+}
+
+.cine-explore-card {
+  position: relative;
+  display: grid;
+  align-content: space-between;
+  gap: 24px;
+  min-height: 280px;
+  padding: clamp(28px, 3.4vw, 44px);
+  background: var(--deep-forest);
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.4s ease;
+}
+
+.cine-explore-card:hover {
+  background: var(--dark-moss);
+}
+
+.cine-explore-index {
+  font-family: "Lora", Georgia, serif;
+  font-size: 1rem;
+  color: var(--eco-electric);
+}
+
+.cine-explore-card h3 {
+  font-family: "Lora", Georgia, serif;
+  font-size: clamp(1.5rem, 2.6vw, 2rem);
+  color: var(--warm-white);
+  margin: 0;
+}
+
+.cine-explore-card p {
+  margin: 0;
+  color: var(--soft-sage);
+  line-height: 1.6;
+}
+
+.cine-explore-card .article-link {
+  color: var(--eco-electric);
+}
+
+.cine-explore-card .article-link svg {
+  transition: transform 0.3s ease;
+}
+
+.cine-explore-card:hover .article-link svg {
+  transform: translateX(4px);
+}
+
+/* ---------- partnerships placeholder ---------- */
+.cine-partners {
+  text-align: center;
+}
+
+.cine-partners h2 {
+  color: var(--warm-white);
+  font-size: clamp(1.8rem, 3.6vw, 2.6rem);
+}
+
+.cine-partners-placeholder {
+  margin: 28px auto 0;
+  max-width: 640px;
+  padding: 28px;
+  border: 1px dashed rgba(139, 226, 138, 0.32);
+  border-radius: 10px;
+  color: var(--soft-sage);
+  font-size: 0.98rem;
+  line-height: 1.7;
+}
+
+.cine-partners-placeholder strong {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--eco-electric);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+/* ---------- final CTA ---------- */
+.cine-cta {
+  text-align: center;
+  background: radial-gradient(120% 100% at 50% 100%, var(--dark-moss) 0%, var(--deep-forest) 55%, var(--almost-black) 100%);
+}
+
+.cine-cta h2 {
+  color: var(--warm-white);
+  font-size: clamp(2.6rem, 7vw, 6rem);
+  max-width: 100%;
+}
+
+.cine-cta p {
+  margin: 22px auto 0;
+  max-width: 560px;
+  color: var(--soft-sage);
+  font-size: 1.1rem;
+  line-height: 1.7;
+}
+
+.cine-cta .cta-actions {
+  justify-content: center;
+  margin-top: 36px;
+}
+
+/* ---------- footer tagline ---------- */
+.home .site-footer {
+  background: var(--almost-black);
+  border-top: 1px solid rgba(139, 226, 138, 0.12);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.footer-tagline {
+  margin: 0;
+  color: var(--eco-electric);
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+}
+
+.home .site-footer .footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+/* ---------- reveal variant for dark sections ---------- */
+.home .reveal {
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+
+.home .reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 980px) {
+  .cine-problem,
+  .cine-impact {
+    grid-template-columns: 1fr;
+  }
+
+  .cine-problem-mark {
+    justify-self: start;
+  }
+
+  .cine-explore-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cine-journey-pin {
+    height: 320vh;
+  }
+}
+
+@media (max-width: 640px) {
+  .journey-card {
+    flex-basis: 84vw;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue-line {
+    animation: none;
+  }
+}

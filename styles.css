@@ -11,6 +11,17 @@
   --muted: #5c6a63;
   --line: rgba(20, 33, 28, 0.14);
   --shadow: 0 22px 70px rgba(12, 35, 27, 0.24);
+
+  /* Cinematic palette — additive tokens for the homepage rebuild.
+     Kept alongside the tokens above rather than replacing them, so
+     pages not yet rebuilt are unaffected. */
+  --deep-forest: #071a12;
+  --almost-black: #050806;
+  --dark-moss: #102b1e;
+  --natural-green: #3e7b52;
+  --eco-electric: #8be28a;
+  --soft-sage: #bfd8c1;
+  --warm-white: #f2f4ec;
 }
 
 * {
