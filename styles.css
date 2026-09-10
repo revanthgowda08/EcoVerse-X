@@ -1,20 +1,29 @@
 :root {
   --green-950: #0c231b;
   --green-850: #12372a;
-  --green-700: #23634b;
+  /* Site-wide reskin to the cinematic dark theme: --green-700 was the
+     accent color for labels/tags/links/icons/stat numbers across every
+     shared component (feature cards, venture/world cards, article
+     links, metrics, connect-form status). Repointing it at the bright
+     cinematic accent, rather than rewriting every rule that
+     references it, reskins all of them consistently in one place. */
+  --green-700: var(--eco-electric);
   --green-500: #4a9f70;
   --mint-100: #dff4e8;
   --sky-100: #dceef2;
   --amber-200: #f2d48a;
-  --paper: #f6f3ea;
-  --ink: #14211c;
-  --muted: #5c6a63;
-  --line: rgba(20, 33, 28, 0.14);
-  --shadow: 0 22px 70px rgba(12, 35, 27, 0.24);
+  /* --paper/--ink/--muted/--line were the light "paper" theme's
+     background/text/muted-text/hairline tokens. Repointed at their
+     dark-cinematic equivalents so every shared section, card, and
+     form built on them (about/approach/connect/journal/articles)
+     inherits the same dark theme as the homepage. */
+  --paper: var(--deep-forest);
+  --ink: var(--warm-white);
+  --muted: var(--soft-sage);
+  --line: rgba(191, 216, 193, 0.16);
+  --shadow: 0 22px 70px rgba(3, 10, 6, 0.5);
 
-  /* Cinematic palette — additive tokens for the homepage rebuild.
-     Kept alongside the tokens above rather than replacing them, so
-     pages not yet rebuilt are unaffected. */
+  /* Cinematic palette — the dark cinematic theme's base tokens. */
   --deep-forest: #071a12;
   --almost-black: #050806;
   --dark-moss: #102b1e;
@@ -159,6 +168,7 @@ a {
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.14em;
+  color: var(--eco-electric);
 }
 
 h1,
@@ -317,7 +327,7 @@ h3 {
 .feature-card {
   min-height: 260px;
   padding: clamp(24px, 4vw, 42px);
-  background: #fffaf0;
+  background: var(--dark-moss);
   border: 1px solid transparent;
   transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
 }
@@ -367,7 +377,7 @@ h3 {
   padding: 28px 24px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: #fffaf0;
+  background: var(--dark-moss);
   transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
 }
 
@@ -400,7 +410,7 @@ h3 {
   display: grid;
   gap: clamp(24px, 5vw, 60px);
   padding: clamp(64px, 9vw, 120px) clamp(18px, 5vw, 64px);
-  background-color: #fffaf0;
+  background-color: var(--dark-moss);
   background-image:
     radial-gradient(circle, rgba(74, 159, 112, 0.1), transparent 60%),
     radial-gradient(circle, rgba(220, 238, 242, 0.24), transparent 60%);
@@ -480,7 +490,7 @@ h3 {
   padding: 32px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: #fffaf0;
+  background: var(--dark-moss);
   transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
 }
 
@@ -522,7 +532,7 @@ h3 {
 .vision-section {
   grid-template-columns: minmax(280px, 0.95fr) minmax(300px, 0.9fr);
   align-items: center;
-  background: #fffaf0;
+  background: var(--dark-moss);
 }
 
 .vision-media {
@@ -580,7 +590,7 @@ h3 {
   display: grid;
   gap: clamp(24px, 5vw, 60px);
   padding: clamp(64px, 9vw, 120px) clamp(18px, 5vw, 64px);
-  background-color: #fffaf0;
+  background-color: var(--dark-moss);
   background-image:
     radial-gradient(circle, rgba(74, 159, 112, 0.1), transparent 60%),
     radial-gradient(circle, rgba(220, 238, 242, 0.22), transparent 60%);
@@ -721,7 +731,7 @@ h3 {
   padding: 28px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: #fffaf0;
+  background: var(--dark-moss);
   text-decoration: none;
   color: inherit;
   transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
@@ -939,12 +949,12 @@ h3 {
   font-style: italic;
   font-size: 1.35rem;
   line-height: 1.5;
-  color: var(--green-850);
+  color: var(--warm-white);
 }
 
 .article-cta-section {
   padding: clamp(48px, 8vw, 100px) clamp(18px, 5vw, 64px) clamp(80px, 10vw, 140px);
-  background: #fffaf0;
+  background: var(--dark-moss);
 }
 
 .article-cta {
@@ -959,6 +969,7 @@ h3 {
 
 .article-cta h2 {
   font-size: clamp(1.6rem, 3vw, 2.2rem);
+  color: var(--green-950);
 }
 
 .article-cta p {

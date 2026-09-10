@@ -2,19 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://ecoverseearth.com/</loc>
-    <lastmod>2026-09-08</lastmod>
+    <lastmod>2026-09-10</lastmod>
   </url>
   <url>
     <loc>https://ecoverseearth.com/about.html</loc>
-    <lastmod>2026-09-08</lastmod>
+    <lastmod>2026-09-10</lastmod>
   </url>
   <url>
     <loc>https://ecoverseearth.com/approach.html</loc>
-    <lastmod>2026-09-08</lastmod>
+    <lastmod>2026-09-10</lastmod>
+  </url>
+  <url>
+    <loc>https://ecoverseearth.com/impact.html</loc>
+    <lastmod>2026-09-10</lastmod>
   </url>
   <url>
     <loc>https://ecoverseearth.com/connect.html</loc>
-    <lastmod>2026-09-08</lastmod>
+    <lastmod>2026-09-10</lastmod>
   </url>
   <url>
     <loc>https://ecoverseearth.com/articles/index.html</loc>
@@ -22,15 +26,15 @@
   </url>
   <url>
     <loc>https://ecoverseearth.com/articles/verification-gap.html</loc>
-    <lastmod>2026-09-01</lastmod>
+    <lastmod>2026-09-10</lastmod>
   </url>
   <url>
     <loc>https://ecoverseearth.com/articles/invisible-work.html</loc>
-    <lastmod>2026-09-01</lastmod>
+    <lastmod>2026-09-10</lastmod>
   </url>
   <url>
     <loc>https://ecoverseearth.com/articles/trust-problem.html</loc>
-    <lastmod>2026-09-01</lastmod>
+    <lastmod>2026-09-10</lastmod>
   </url>
   <url>
     <loc>https://ecoverseearth.com/articles/unpriced-labor.html</loc>
