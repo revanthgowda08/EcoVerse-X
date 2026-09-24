@@ -333,6 +333,132 @@
     });
   }
 
+  /* ---------- back to top ---------- */
+  function initBackToTop() {
+    const btn = document.createElement("button");
+    btn.className = "back-to-top";
+    btn.type = "button";
+    btn.setAttribute("aria-label", "Back to top");
+    btn.innerHTML =
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>';
+    document.body.appendChild(btn);
+
+    function update() {
+      btn.classList.toggle("is-visible", window.scrollY > 600);
+    }
+    window.addEventListener("scroll", update, { passive: true });
+    update();
+
+    btn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
+    });
+  }
+
+  /* ---------- reading progress bar (article pages only) ---------- */
+  function initReadingProgress() {
+    const body = document.querySelector(".article-body");
+    if (!body) return;
+
+    const bar = document.createElement("div");
+    bar.className = "reading-progress";
+    document.body.appendChild(bar);
+
+    function update() {
+      const rect = body.getBoundingClientRect();
+      const total = rect.height - window.innerHeight;
+      const scrolled = Math.min(Math.max(-rect.top, 0), Math.max(total, 1));
+      const pct = total > 0 ? (scrolled / total) * 100 : 0;
+      bar.style.width = pct + "%";
+    }
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update, { passive: true });
+    update();
+  }
+
+  /* ---------- article registry (Journal + related + share) ---------- */
+  const ARTICLES = [
+    { url: "verification-gap.html", title: "The Verification Gap", tag: "Trust & Verification" },
+    { url: "invisible-work.html", title: "Why Rural India's Best Environmental Work Stays Invisible", tag: "Ground Truth" },
+    { url: "trust-problem.html", title: "Sustainability Has a Trust Problem, Not an Awareness Problem", tag: "Perspective" },
+    { url: "unpriced-labor.html", title: "The Environmental Economy Nobody Prices", tag: "Invisible Labor" },
+    { url: "wrong-person.html", title: "Climate Tech Keeps Solving the Wrong Person's Problem", tag: "Design & Access" },
+    { url: "disappearing-impact.html", title: "The Impact That Disappears the Moment It Happens", tag: "Memory & Permanence" },
+  ];
+
+  function currentArticleIndex() {
+    const file = location.pathname.split("/").pop();
+    return ARTICLES.findIndex((a) => a.url === file);
+  }
+
+  /* ---------- social share row (article pages only) ---------- */
+  function initShareRow() {
+    const header = document.querySelector(".article-header");
+    if (!header) return;
+
+    const canonical = document.querySelector('link[rel="canonical"]');
+    const url = canonical ? canonical.href : location.href;
+    const title = document.title.replace(/\s*\|\s*Ecoverse Journal$/, "");
+
+    const wrap = document.createElement("div");
+    wrap.className = "share-row-wrap";
+    wrap.innerHTML = `
+      <div class="share-row">
+        <span class="share-label">Share</span>
+        <a href="https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}" target="_blank" rel="noopener" aria-label="Share on X">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.9 2H22l-7.6 8.7L23.3 22h-7.1l-5.5-7.2L4.4 22H1.3l8.1-9.3L1 2h7.3l5 6.6L18.9 2zm-1.2 18h1.9L7.4 4H5.4l12.3 16z"></path></svg>
+        </a>
+        <a href="https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}" target="_blank" rel="noopener" aria-label="Share on LinkedIn">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3V9zm7 0h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05C21.8 8.65 23 11 23 14.4V21h-4v-5.7c0-1.36-.02-3.1-1.9-3.1-1.9 0-2.2 1.48-2.2 3v5.8h-4V9z"></path></svg>
+        </a>
+        <button type="button" class="share-copy" aria-label="Copy link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+        </button>
+        <span class="share-copied">Link copied</span>
+      </div>
+    `;
+    header.insertAdjacentElement("afterend", wrap);
+
+    const copyBtn = wrap.querySelector(".share-copy");
+    const copiedLabel = wrap.querySelector(".share-copied");
+    copyBtn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(url);
+        copiedLabel.classList.add("is-visible");
+        setTimeout(() => copiedLabel.classList.remove("is-visible"), 1800);
+      } catch (err) {
+        /* clipboard API unavailable (older browser, non-HTTPS) — no-op */
+      }
+    });
+  }
+
+  /* ---------- related articles (article pages only) ---------- */
+  function initRelatedArticles() {
+    const ctaSection = document.querySelector(".article-cta-section");
+    const idx = currentArticleIndex();
+    if (!ctaSection || idx === -1 || ARTICLES.length < 2) return;
+
+    const picks = [ARTICLES[(idx + 1) % ARTICLES.length], ARTICLES[(idx + 2) % ARTICLES.length]];
+
+    const section = document.createElement("section");
+    section.className = "related-articles";
+    section.setAttribute("aria-label", "More from the Journal");
+    section.innerHTML = `
+      <h2>Keep reading</h2>
+      <div class="related-grid">
+        ${picks
+          .map(
+            (a) => `
+          <a class="related-card" href="${a.url}">
+            <p class="related-tag">${a.tag}</p>
+            <h3>${a.title}</h3>
+          </a>`
+          )
+          .join("")}
+      </div>
+    `;
+    ctaSection.insertAdjacentElement("beforebegin", section);
+  }
+
   /* ---------- generic reveal for cinematic sections ---------- */
   function initCineReveal() {
     const els = document.querySelectorAll(
@@ -365,5 +491,9 @@
     initMorph();
     initJourney();
     initCineReveal();
+    initBackToTop();
+    initReadingProgress();
+    initShareRow();
+    initRelatedArticles();
   });
 })();
