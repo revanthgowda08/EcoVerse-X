@@ -96,6 +96,45 @@
     });
   }
 
+  /* ---------- card tilt-on-hover ----------
+     Inline transform always beats each card's existing class-based
+     :hover transform (translateY lift) regardless of source order,
+     so we replicate that same lift amount here rather than lose it —
+     the tilt composes with the lift instead of fighting it. */
+  function initCardTilt() {
+    const isTouch = window.matchMedia("(hover: none), (pointer: coarse)").matches;
+    if (reduceMotion || isTouch) return;
+
+    const configs = [
+      { selector: ".feature-card", lift: -6 },
+      { selector: ".venture-card", lift: -6 },
+      { selector: ".world-card", lift: -6 },
+      { selector: ".article-card", lift: -6 },
+      { selector: ".related-card", lift: -4 },
+      { selector: ".cine-explore-card", lift: 0 },
+      { selector: ".journey-card", lift: -4 },
+    ];
+
+    configs.forEach(({ selector, lift }) => {
+      document.querySelectorAll(selector).forEach((card) => {
+        card.classList.add("tilt-card");
+
+        card.addEventListener("mousemove", (event) => {
+          const rect = card.getBoundingClientRect();
+          const px = (event.clientX - rect.left) / rect.width - 0.5;
+          const py = (event.clientY - rect.top) / rect.height - 0.5;
+          const rotateY = px * 8;
+          const rotateX = py * -8;
+          card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(${lift}px)`;
+        });
+
+        card.addEventListener("mouseleave", () => {
+          card.style.transform = "";
+        });
+      });
+    });
+  }
+
   /* ---------- nav scroll-blur state ---------- */
   function initNavBlur() {
     const header = document.querySelector(".site-header");
@@ -495,5 +534,6 @@
     initReadingProgress();
     initShareRow();
     initRelatedArticles();
+    initCardTilt();
   });
 })();
