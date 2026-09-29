@@ -480,16 +480,28 @@ body.no-custom-cursor .cursor-ring {
   font-size: clamp(1.8rem, 3.6vw, 2.6rem);
 }
 
-.cine-partners-placeholder {
+.cine-partners-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  max-width: 900px;
   margin: 28px auto 0;
-  max-width: 640px;
+}
+
+.cine-partners-placeholder {
+  margin: 0;
   padding: 28px;
   border: 1px dashed rgba(139, 226, 138, 0.32);
   border-radius: 10px;
   color: var(--soft-sage);
   font-size: 0.98rem;
   line-height: 1.7;
+  text-align: left;
   animation: partners-pulse 4s ease-in-out infinite;
+}
+
+.cine-partners-grid .cine-partners-placeholder:nth-child(2) {
+  animation-delay: -2s;
 }
 
 @keyframes partners-pulse {
@@ -585,6 +597,10 @@ body.no-custom-cursor .cursor-ring {
   }
 
   .cine-explore-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cine-partners-grid {
     grid-template-columns: 1fr;
   }
 
