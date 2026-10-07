@@ -501,7 +501,7 @@
   /* ---------- generic reveal for cinematic sections ---------- */
   function initCineReveal() {
     const els = document.querySelectorAll(
-      ".cine-problem-copy, .cine-impact-copy, #impact-orbit, .cine-explore-card, .cine-partners-placeholder, .cine-cta h2, .cine-cta p, .cine-cta .cta-actions"
+      ".cine-problem-copy, .cine-impact-copy, #impact-orbit, .cine-explore-card, .cine-summit-media, .cine-summit-copy, .cine-partners-placeholder, .cine-cta h2, .cine-cta p, .cine-cta .cta-actions"
     );
     if (!els.length || reduceMotion || !("IntersectionObserver" in window)) return;
 
