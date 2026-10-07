@@ -31,6 +31,14 @@
   --eco-electric: #8be28a;
   --soft-sage: #bfd8c1;
   --warm-white: #f2f4ec;
+
+  /* Secondary premium accents — used sparingly (hero particles, the
+     impact orbit, alternating stat numbers, the Green Summit CTA) so
+     the site reads as more than a single shade of green, without
+     diluting green as the primary brand color. --amber-200 already
+     existed as an unused token; repurposed here as the warm-gold
+     accent rather than adding a near-duplicate. */
+  --teal-accent: #5fb8c4;
 }
 
 * {
@@ -234,6 +242,11 @@ h3 {
 
 .primary {
   background: var(--mint-100);
+  color: var(--green-950);
+}
+
+.gold {
+  background: var(--amber-200);
   color: var(--green-950);
 }
 
@@ -573,6 +586,12 @@ h3 {
   font-size: 2.15rem;
   font-weight: 800;
   color: var(--green-700);
+}
+
+/* alternate the second stat gold so a metrics row reads as two
+   accent colors rather than a single repeated green */
+.metrics div:nth-child(2) dt {
+  color: var(--amber-200);
 }
 
 .metrics dd {

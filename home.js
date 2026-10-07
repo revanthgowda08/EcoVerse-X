@@ -166,12 +166,26 @@
       ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
     }
 
+    // Mostly green, with a sprinkle of the gold/teal premium accents so
+    // the hero reads as more than a single shade of green up close.
+    const PARTICLE_COLORS = [
+      "139, 226, 138", // eco-electric green
+      "139, 226, 138",
+      "139, 226, 138",
+      "139, 226, 138",
+      "139, 226, 138",
+      "139, 226, 138",
+      "242, 212, 138", // amber-200 gold
+      "95, 184, 196", // teal-accent
+    ];
+
     function makeParticles() {
       particles = Array.from({ length: COUNT }, () => ({
         x: Math.random() * width,
         y: Math.random() * height,
         vx: (Math.random() - 0.5) * 0.25,
         vy: (Math.random() - 0.5) * 0.25,
+        color: PARTICLE_COLORS[Math.floor(Math.random() * PARTICLE_COLORS.length)],
       }));
     }
 
@@ -227,8 +241,8 @@
         }
       }
 
-      ctx.fillStyle = "rgba(139, 226, 138, 0.75)";
       particles.forEach((p) => {
+        ctx.fillStyle = `rgba(${p.color}, 0.75)`;
         ctx.beginPath();
         ctx.arc(p.x, p.y, 1.6, 0, Math.PI * 2);
         ctx.fill();
@@ -281,11 +295,15 @@
         ctx.stroke();
       });
 
-      ctx.fillStyle = "#8be28a";
+      // Gold core (the verified record) with green/teal satellites
+      // orbiting it (the actions that build it) — the accent colors
+      // carry meaning here rather than just decorating.
+      ctx.fillStyle = "#f2d48a";
       ctx.beginPath();
       ctx.arc(cx, cy, size * 0.045, 0, Math.PI * 2);
       ctx.fill();
 
+      const orbitColors = ["#8be28a", "#5fb8c4", "#8be28a", "#5fb8c4"];
       rings.forEach((r, i) => {
         const speed = 0.4 + i * 0.18;
         const a = angle * speed + i;
@@ -293,7 +311,7 @@
         const y = cy + Math.sin(a) * r * (size / 2);
         ctx.beginPath();
         ctx.arc(x, y, size * 0.014, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(242, 244, 236, 0.9)";
+        ctx.fillStyle = orbitColors[i];
         ctx.fill();
       });
     }
