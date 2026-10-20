@@ -1,0 +1,54 @@
+/* Reuses the exact palette from the main Ecoverse site
+   (../../../styles.css) so Carbon Intelligence reads as the same
+   product, not a bolted-on tool. Kept as a separate, small token file
+   rather than importing the main site's full stylesheet, since this is
+   a different build pipeline (bundled Vite app vs. plain <link>). */
+:root {
+  --deep-forest: #071a12;
+  --almost-black: #050806;
+  --dark-moss: #102b1e;
+  --natural-green: #3e7b52;
+  --eco-electric: #8be28a;
+  --soft-sage: #bfd8c1;
+  --warm-white: #f2f4ec;
+  --amber-200: #f2d48a;
+  --teal-accent: #5fb8c4;
+  --green-950: #0c231b;
+  --line: rgba(191, 216, 193, 0.16);
+  --danger: #e2735a;
+
+  --font-sans: 'Manrope', system-ui, sans-serif;
+  --font-serif: 'Lora', Georgia, serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: var(--almost-black);
+  color: var(--warm-white);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-serif);
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}
+
+img {
+  max-width: 100%;
+}
