@@ -17,6 +17,37 @@
   // check below is re-evaluated inside the DOMContentLoaded handler (which
   // always fires after all deferred scripts have run), never hoisted to
   // module-load time, so the feature checks stay accurate.
+  // Phones/tablets: native touch scrolling is smoother than JS smooth-scroll,
+  // and the canvas effects need to be lighter to avoid jank and GPU-memory
+  // blank-outs while scrolling.
+  const isMobile = window.matchMedia(
+    "(hover: none), (pointer: coarse), (max-width: 768px)"
+  ).matches;
+
+  // Run a per-frame callback only while `el` is on screen and the tab is
+  // visible, so off-screen canvases don't burn the main thread/GPU.
+  function animateWhileVisible(el, frame) {
+    let visible = true;
+    let rafId = 0;
+    function tick() {
+      rafId = 0;
+      if (!visible || document.hidden) return;
+      frame();
+      rafId = requestAnimationFrame(tick);
+    }
+    function start() {
+      if (!rafId && visible && !document.hidden) rafId = requestAnimationFrame(tick);
+    }
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver((entries) => {
+        visible = entries[0].isIntersecting;
+        start();
+      }).observe(el);
+    }
+    document.addEventListener("visibilitychange", start);
+    start();
+  }
+
   let hasGSAP = false;
   let hasScrollTrigger = false;
   let hasLenis = false;
@@ -28,12 +59,13 @@
 
     if (hasGSAP && hasScrollTrigger) {
       window.gsap.registerPlugin(window.ScrollTrigger);
+      window.ScrollTrigger.config({ ignoreMobileResize: true });
     }
   }
 
   /* ---------- Lenis smooth scroll ---------- */
   function initLenis() {
-    if (reduceMotion || !hasLenis) return null;
+    if (reduceMotion || isMobile || !hasLenis) return null;
 
     const lenis = new window.Lenis({
       duration: 1.1,
@@ -155,8 +187,8 @@
     if (!ctx) return;
 
     let width, height, particles;
-    const DPR = Math.min(window.devicePixelRatio || 1, 2);
-    const COUNT = reduceMotion ? 0 : 70;
+    const DPR = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
+    const COUNT = reduceMotion ? 0 : isMobile ? 28 : 70;
 
     function resize() {
       width = canvas.clientWidth;
@@ -248,10 +280,9 @@
         ctx.fill();
       });
 
-      requestAnimationFrame(step);
     }
 
-    requestAnimationFrame(step);
+    animateWhileVisible(canvas, step);
     window.addEventListener(
       "resize",
       () => {
@@ -268,7 +299,7 @@
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const DPR = Math.min(window.devicePixelRatio || 1, 2);
+    const DPR = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
     let size;
     let angle = 0;
 
@@ -324,9 +355,8 @@
     function loop() {
       angle += 0.0035;
       draw();
-      requestAnimationFrame(loop);
     }
-    requestAnimationFrame(loop);
+    animateWhileVisible(canvas, loop);
   }
 
   /* ---------- morph text crossfade ---------- */
@@ -337,7 +367,9 @@
     const inEl = wrap.querySelector(".morph-in");
     if (!out || !inEl) return;
 
-    if (reduceMotion || !hasGSAP || !hasScrollTrigger) {
+    // On phones, skip the pinned scrub: it fights native touch scrolling and
+    // the mobile address bar (lag / blank gaps). Show the final line instead.
+    if (reduceMotion || isMobile || !hasGSAP || !hasScrollTrigger) {
       out.style.opacity = "0";
       inEl.style.opacity = "1";
       return;
@@ -365,7 +397,8 @@
     const bar = document.querySelector(".cine-journey-progress-bar");
     if (!pinWrap || !track) return;
 
-    if (reduceMotion || !hasGSAP || !hasScrollTrigger) return;
+    // Phones keep the native swipeable track (the no-pin default layout).
+    if (reduceMotion || isMobile || !hasGSAP || !hasScrollTrigger) return;
 
     pinWrap.classList.add("js-pinned-journey");
 

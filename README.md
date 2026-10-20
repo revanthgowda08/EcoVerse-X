@@ -1,13 +1,32 @@
-# Announcement
+# Ecoverse
 
-Static launch page for Ecoverse, a new TLNB Services LLP venture announced for World Environment Day.
+Website for Ecoverse (`ecoverseearth.com`), a TLNB Services LLP venture that turns everyday environmental action into a verified, permanent record of impact. Launched for World Environment Day (June 5).
 
-## Files
+It is a plain static site: HTML, CSS and JavaScript with no build step or backend.
 
-- `index.html` - announcement page content and structure
-- `styles.css` - responsive visual design
-- `script.js` - icon initialization
+## Structure
+
+| Path | Purpose |
+| --- | --- |
+| `index.html` | Launch homepage (hero, ecosystem, Green Summit announcement) |
+| `about.html`, `approach.html`, `impact.html`, `connect.html` | Supporting pages |
+| `404.html` | Not-found page |
+| `articles/` | The Journal: `index.html` plus six long-form essays on verification, trust and unpriced environmental work |
+| `styles.css` | Shared site styles |
+| `home.css`, `home.js` | Homepage and cinematic effects: smooth scroll, custom cursor, card tilt, hero particle network, impact orbit canvas, pinned horizontal journey; also article features (reading progress, related articles, share row, back-to-top) |
+| `script.js` | Icon initialization and scroll parallax |
+| `assets/images/` | Announcement and article cover images |
+| `sitemap.xml`, `robots.txt` | SEO files |
+| `CNAME` | Custom domain for GitHub Pages |
+
+Pages include Open Graph/Twitter metadata and schema.org JSON-LD naming TLNB Services LLP as the parent organization.
+
+## Local preview
+
+    python3 -m http.server 8000
+
+Then open http://localhost:8000.
 
 ## Hosting
 
-This site is ready for GitHub Pages or any static host. To publish under a TLNB domain or subdomain, configure the hosting provider and DNS to point to this repository's published static site.
+Deployed as static files (GitHub Pages or any static host) on `ecoverseearth.com`.

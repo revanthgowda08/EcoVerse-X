@@ -1,0 +1,345 @@
+/* ============================================================
+   Glam layer — loaded last on every page. Adds a richer palette
+   (champagne gold, rose, violet, aqua) and polish on top of the
+   green base: aurora glow, gradient headlines, shimmering gold
+   buttons, glass cards with gradient edges, sparkle accents.
+   Pure CSS; motion is disabled under prefers-reduced-motion.
+   ============================================================ */
+:root {
+  --glam-gold: #f5d98b;
+  --glam-gold-deep: #d9a441;
+  --glam-rose: #ff8fb1;
+  --glam-violet: #a78bfa;
+  --glam-aqua: #5eead4;
+  --glam-gradient: linear-gradient(110deg, var(--glam-gold) 0%, var(--glam-rose) 38%, var(--glam-violet) 68%, var(--glam-aqua) 100%);
+  --glam-edge: linear-gradient(135deg, rgba(245, 217, 139, 0.7), rgba(167, 139, 250, 0.35) 45%, rgba(94, 234, 212, 0.55));
+}
+
+/* Aurora wash behind every page */
+body {
+  background:
+    radial-gradient(60rem 40rem at 8% -10%, rgba(167, 139, 250, 0.16), transparent 60%),
+    radial-gradient(50rem 36rem at 95% 5%, rgba(245, 217, 139, 0.12), transparent 60%),
+    radial-gradient(55rem 40rem at 50% 110%, rgba(255, 143, 177, 0.1), transparent 60%),
+    var(--paper);
+  background-attachment: fixed;
+}
+
+/* Gradient headlines */
+h1,
+h2 {
+  background: var(--glam-gradient);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: glam-flow 12s linear infinite;
+  padding-bottom: 0.12em; /* keep descenders from being clipped by background-clip */
+}
+
+/* Eyebrows & labels: champagne gold with a tiny sparkle */
+.eyebrow,
+.cine-eyebrow,
+.section-label,
+.cine-hero .eyebrow,
+.cine-launch-panel .panel-kicker,
+.panel-kicker {
+  color: var(--glam-gold);
+}
+.eyebrow::before,
+.cine-eyebrow::before {
+  content: "\2726";
+  margin-right: 0.55em;
+  color: var(--glam-gold);
+  text-shadow: 0 0 12px rgba(245, 217, 139, 0.9);
+}
+
+/* Buttons */
+.button.primary {
+  background: linear-gradient(120deg, var(--glam-aqua), var(--eco-electric) 55%, var(--glam-gold));
+  color: #06140d;
+  box-shadow: 0 10px 30px rgba(94, 234, 212, 0.25);
+}
+.button.gold {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(120deg, #fff1c2, var(--glam-gold) 40%, var(--glam-gold-deep));
+  color: #2a1c02;
+  box-shadow: 0 10px 34px rgba(217, 164, 65, 0.4);
+}
+.button.gold::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.65) 50%, transparent 65%);
+  transform: translateX(-120%);
+  animation: glam-shine 4.5s ease-in-out infinite;
+}
+.button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 0 4px rgba(245, 217, 139, 0.18), 0 16px 40px rgba(167, 139, 250, 0.3);
+}
+.button.secondary {
+  border-color: rgba(245, 217, 139, 0.55);
+}
+
+/* Glass cards with a gradient hairline edge */
+.feature-card,
+.journey-card,
+.cine-explore-card {
+  position: relative;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02));
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid transparent;
+  box-shadow: 0 18px 50px rgba(3, 8, 6, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+.feature-card::before,
+.journey-card::before,
+.cine-explore-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: var(--glam-edge);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  pointer-events: none;
+  opacity: 0.55;
+  transition: opacity 0.35s ease;
+}
+.feature-card:hover::before,
+.journey-card:hover::before,
+.cine-explore-card:hover::before {
+  opacity: 1;
+}
+
+/* Numbers & indexes pick up the gradient */
+.journey-index,
+.cine-explore-index {
+  background: var(--glam-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Links in articles & cards */
+.article-link {
+  color: var(--glam-gold);
+}
+.article-link:hover {
+  color: var(--glam-aqua);
+}
+
+/* Header: frosted glass with a gold underline glow */
+.site-header--solid,
+.site-header.is-scrolled {
+  border-bottom: 1px solid rgba(245, 217, 139, 0.22);
+  box-shadow: 0 8px 30px rgba(3, 8, 6, 0.4), 0 1px 0 rgba(245, 217, 139, 0.15);
+}
+.nav-links a:hover {
+  color: var(--glam-gold);
+}
+
+/* Reading-progress bar & custom cursor in glam colors */
+.cursor-dot {
+  background: var(--glam-gold) !important;
+}
+.cursor-ring {
+  border-color: rgba(245, 217, 139, 0.6) !important;
+}
+
+/* Footer */
+.site-footer {
+  border-top: 1px solid rgba(245, 217, 139, 0.2);
+  background-image: linear-gradient(180deg, rgba(167, 139, 250, 0.06), transparent 60%);
+}
+
+/* Selection */
+::selection {
+  background: rgba(245, 217, 139, 0.35);
+  color: #fff;
+}
+
+@keyframes glam-flow {
+  to { background-position: 200% center; }
+}
+@keyframes glam-shine {
+  0%, 55% { transform: translateX(-120%); }
+  100% { transform: translateX(120%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  h1,
+  h2 { animation: none; }
+  .button.gold::after { animation: none; display: none; }
+}
+
+/* ---- Extra sparkle: slow floating glow orbs + twinkling stars ----
+   Fixed, non-interactive and low opacity so they add depth without
+   competing with content. */
+html::before,
+html::after {
+  content: "";
+  position: fixed;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.22;
+}
+html::before {
+  width: 26rem;
+  height: 26rem;
+  top: 12%;
+  left: -8rem;
+  background: radial-gradient(circle, var(--glam-violet), transparent 70%);
+  animation: glam-float 22s ease-in-out infinite alternate;
+}
+html::after {
+  width: 24rem;
+  height: 24rem;
+  bottom: 6%;
+  right: -7rem;
+  background: radial-gradient(circle, var(--glam-gold), transparent 70%);
+  animation: glam-float 28s ease-in-out infinite alternate-reverse;
+}
+.site-footer {
+  position: relative;
+  z-index: 1;
+}
+
+/* Twinkling stars on the gold brand mark and gold button */
+.brand-mark {
+  box-shadow: 0 0 0 1px rgba(245, 217, 139, 0.4), 0 0 18px rgba(245, 217, 139, 0.25);
+}
+.button.gold::before {
+  content: "\2726";
+  margin-right: 2px;
+  animation: glam-twinkle 2.6s ease-in-out infinite;
+}
+
+@keyframes glam-float {
+  to { transform: translate(6rem, -4rem) scale(1.15); }
+}
+@keyframes glam-twinkle {
+  0%, 100% { opacity: 0.45; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html::before,
+  html::after,
+  .button.gold::before { animation: none; }
+}
+
+/* ---- Featured announcement (Green Summit) ----
+   Highlighted card: gradient edge, soft glow, and a "Featured" ribbon. */
+.cine-featured .cine-summit-grid {
+  position: relative;
+  padding: clamp(18px, 3vw, 36px);
+  border-radius: 20px;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02));
+  box-shadow: 0 30px 90px rgba(3, 8, 6, 0.55), 0 0 80px rgba(245, 217, 139, 0.12);
+}
+.cine-featured .cine-summit-grid::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: var(--glam-edge);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  pointer-events: none;
+}
+.cine-featured .cine-summit-media img {
+  border-radius: 14px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(245, 217, 139, 0.35);
+}
+.cine-featured .cine-summit-copy .cine-eyebrow {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(245, 217, 139, 0.12);
+  border: 1px solid rgba(245, 217, 139, 0.4);
+}
+.cine-featured .cine-summit-copy .cine-eyebrow {
+  margin-bottom: 14px;
+}
+
+/* ---- Mobile / touch performance ----
+   Phones struggled with fixed full-screen layers, large blurs, backdrop
+   filters and always-running gradient animations (scroll lag and blank
+   flashes from GPU memory pressure). Keep the look, drop the expensive
+   parts: static gradients, no fixed blurred orbs, no film-grain blend
+   overlay, no backdrop blur, no infinite background animations. */
+@media (max-width: 768px), (hover: none), (pointer: coarse) {
+  body {
+    background-attachment: scroll;
+  }
+  html::before,
+  html::after,
+  body::before {
+    display: none;
+  }
+  h1,
+  h2 {
+    animation: none;
+    background-size: 100% auto;
+  }
+  .button.gold::after,
+  .button.gold::before {
+    animation: none;
+  }
+  .button.gold::after {
+    display: none;
+  }
+  .feature-card,
+  .journey-card,
+  .cine-explore-card,
+  .cine-featured .cine-summit-grid,
+  .site-header,
+  .site-header--solid,
+  .site-header.is-scrolled,
+  .cine-launch-panel,
+  .button.secondary {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .feature-card,
+  .journey-card,
+  .cine-explore-card {
+    background: rgba(16, 43, 30, 0.82);
+    box-shadow: 0 10px 28px rgba(3, 8, 6, 0.4);
+  }
+  .site-header--solid,
+  .site-header.is-scrolled {
+    background: rgba(5, 12, 8, 0.94);
+  }
+  .cine-featured .cine-summit-grid {
+    box-shadow: 0 14px 40px rgba(3, 8, 6, 0.5);
+  }
+  .hero-shade,
+  .intro-section,
+  .loop-section,
+  .venture-section,
+  .worlds-section,
+  .connect-section,
+  .explore-section,
+  .journal-hero,
+  .article-header {
+    animation: none; /* mesh-drift background animations repaint every frame */
+  }
+  .cine-morph {
+    min-height: 55vh; /* no pinned scrub on phones, so no need for a full-screen block */
+  }
+  .cine-section {
+    padding-top: 64px;
+    padding-bottom: 64px; /* desktop padding (up to 200px) leaves big empty stretches on phones */
+  }
+}

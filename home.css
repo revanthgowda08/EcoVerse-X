@@ -640,7 +640,7 @@ body.no-custom-cursor .cursor-ring {
     max-width: 100%;
   }
 
-  .cine-journey-pin {
+  .js-pinned-journey.cine-journey-pin {
     height: 320vh;
   }
 }
