@@ -38,7 +38,7 @@ export function SavedResult() {
           saved {new Date(result.calculatedAt).toLocaleDateString()}
         </span>
       </h1>
-      <p className="banner info" style={{ display: 'block' }}>
+      <p className="banner info print-hide" style={{ display: 'block' }}>
         This is a frozen snapshot — it shows the exact factor versions and inputs used at the time,
         even if the live emission-factor dataset has since been revised.
       </p>
@@ -58,6 +58,9 @@ export function SavedResult() {
               }
             >
               Export CSV
+            </button>
+            <button type="button" className="button secondary" onClick={() => window.print()}>
+              Export PDF
             </button>
           </>
         }

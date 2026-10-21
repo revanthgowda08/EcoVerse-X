@@ -427,3 +427,32 @@
     gap: 6px;
   }
 }
+
+/* ---------- print (PDF export via browser print-to-PDF) ---------- */
+/* No PDF library — the browser's own print pipeline already lays out
+   the results page correctly and produces a real PDF via "Save as PDF"
+   in the print dialog. Hides chrome/controls, keeps the report itself. */
+@media print {
+  .app-header,
+  .app-footer,
+  .assessment-actions,
+  .print-hide {
+    display: none !important;
+  }
+
+  .app-main {
+    max-width: none;
+    padding: 0;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+  }
+
+  .section-card,
+  .banner {
+    border: 1px solid #ccc;
+    break-inside: avoid;
+  }
+}

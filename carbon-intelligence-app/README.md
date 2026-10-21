@@ -41,11 +41,15 @@ This is a working foundation, not the complete PRD. Built so far:
 - ✅ Green Missions + EcoCoins UI (`Missions.tsx`) — join a mission,
   submit an estimate for review, see approved EcoCoins balance; coins
   are explicitly labelled as platform rewards, not carbon credits.
-- ✅ CSV export (`src/lib/exportCsv.ts`), wired into both the live
-  results page and saved/historical results.
+- ✅ CSV export (`src/lib/exportCsv.ts`) and PDF export (the browser's
+  own print-to-PDF, via a print stylesheet in `src/styles/app.css` that
+  hides navigation/buttons and keeps the report), both wired into the
+  live results page and saved/historical results.
 - ✅ Routing uses `HashRouter`, not `BrowserRouter` — see the comment
   in `src/main.tsx` for why (GitHub Pages has no SPA fallback, so a
   direct link to a client-side route would 404 under `BrowserRouter`).
+- ✅ API reference (`docs/API.md`) — the Supabase table/RLS/RPC surface
+  this app calls "the API" (there is no separate HTTP service).
 - The app still runs fully with **no Supabase project connected** —
   the calculator, questionnaires, and results work standalone; only
   persistence/auth/admin/missions show an informational "not
@@ -53,10 +57,6 @@ This is a working foundation, not the complete PRD. Built so far:
 
 Not yet built (tracked as follow-up work):
 
-- PDF export (CSV is done; PDF is not).
-- Standalone API documentation beyond this README and the SQL
-  migration comments (the "API" here is direct Supabase table/RPC
-  access under RLS, not a separate HTTP service).
 - Automated deployment (currently a manual build-and-copy step, see
   below).
 - Live validation against a real Supabase project (structurally
@@ -88,18 +88,43 @@ npm run build      # typecheck + production build to dist/
 ### Deploying
 
 The main Ecoverse site is static files served from the repo root via
-GitHub Pages — there's no build pipeline there. Until that changes,
-deploying this app means:
+GitHub Pages — there's no build pipeline there, so this app's *build
+output* is committed directly into the main site repo as a sibling
+directory. There are two repos in play: `carbon-intelligence-app/` (this
+project, the source) lives alongside `carbon-intelligence/` (the built
+output that actually gets served), both at the root of whichever repo
+mirrors the live Ecoverse site.
 
-```bash
-npm run build
-rm -rf ../carbon-intelligence/*
-cp -r dist/* ../carbon-intelligence/
-```
+1. Build:
+   ```bash
+   npm run build
+   ```
+2. Replace the deployed copy with the fresh build:
+   ```bash
+   rm -rf ../carbon-intelligence/*
+   cp -r dist/* ../carbon-intelligence/
+   ```
+   `vite.config.ts` sets `base: '/carbon-intelligence/'` so the built
+   asset paths match this deploy location — don't change one without
+   the other.
+3. Commit **both** `carbon-intelligence-app/` (source) and
+   `carbon-intelligence/` (output) in the same commit, so the repo
+   never has a build output that doesn't match its source.
+4. Push. GitHub Pages serves whatever is on the default branch at the
+   repo root — there's no separate deploy step or CI pipeline to
+   trigger; the push *is* the deploy.
+5. Sanity-check the live URL after a push: open
+   `https://ecoverseearth.com/carbon-intelligence/`, then a
+   deep link like `.../carbon-intelligence/#/methodology` to confirm
+   routing still works (this is why the app uses `HashRouter` —
+   anything after the `#` never reaches GitHub Pages's server, so it
+   can't 404).
 
-then commit `../carbon-intelligence/` (the built output) in the main
-site repo. `vite.config.ts` sets `base: '/carbon-intelligence/'` so the
-built asset paths match that deploy location.
+If this project is later split across two repos that both mirror the
+live site (as happened during initial development), push to each one
+separately and `git fetch` + diff the other repo's `main` first —
+don't blindly overlay one onto the other, in case something else has
+changed it in the meantime.
 
 ### Connecting Supabase
 

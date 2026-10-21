@@ -49,6 +49,10 @@ export function Results() {
     downloadCsv(`ecoverse-carbon-assessment-${result.reportingYear}.csv`, assessmentResultToCsv(result))
   }
 
+  function handleExportPdf() {
+    window.print()
+  }
+
   return (
     <div>
       <p className="eyebrow">Your results</p>
@@ -58,7 +62,7 @@ export function Results() {
         result={result}
         afterHeader={
           configured && (
-            <div className="banner info" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+            <div className="banner info print-hide" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
               {user ? (
                 <>
                   <span>
@@ -95,6 +99,9 @@ export function Results() {
             </button>
             <button type="button" className="button secondary" onClick={handleExportCsv}>
               Export CSV
+            </button>
+            <button type="button" className="button secondary" onClick={handleExportPdf}>
+              Export PDF
             </button>
             <button type="button" className="button secondary" onClick={() => navigate('/methodology')}>
               View methodology
