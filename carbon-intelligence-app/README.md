@@ -12,35 +12,56 @@ This is a working foundation, not the complete PRD. Built so far:
 
 - ✅ Deterministic calculation engine (`src/lib/calc/`) — versioned
   emission factors, explicit unit conversion, missing-data handling
-  that never silently defaults to zero, full reproducibility. 32
+  that never silently defaults to zero, full reproducibility. 44
   passing tests (`npm test`).
-- ✅ Seeded emission-factor dataset (15 factors covering electricity,
-  cooking fuel, vehicle fuel, public transport, air travel, diet, and
-  waste) — every factor cited with source, publication, year, and an
-  explicit `needsValidation` flag. **See "Before production" below.**
-- ✅ Individual and Household questionnaires + results dashboard
-  (category breakdown, completeness indicator, main contributors
-  chart, rule-based reduction opportunities).
+- ✅ Seeded emission-factor dataset (17 factors covering electricity,
+  cooking fuel, vehicle fuel, stationary combustion/generators, public
+  transport, air travel, diet, and waste) — every factor cited with
+  source, publication, year, and an explicit `needsValidation` flag.
+  **See "Before production" below.**
+- ✅ Questionnaires + results dashboard for all five user types —
+  Individual, Household, Business/MSME (Scope 1/2/3), Campus/
+  institution, and Event organizer — with category breakdown,
+  completeness indicator, main-contributors chart, and rule-based
+  reduction opportunities.
 - ✅ Methodology page with full source attribution.
 - ✅ Supabase schema (`supabase/migrations/`) — versioned emission
   factors, assessments with frozen result snapshots for
   reproducibility, organization-level data isolation via RLS, an
   EcoCoins ledger kept structurally separate from the calculation
   engine, Green Missions with separate estimated-vs-measured outcome
-  fields, and an admin-only audit log. **Not yet connected to a live
-  Supabase project** — see "Connecting Supabase" below.
+  fields, and an admin-only audit log.
+- ✅ Supabase auth (`src/state/authStore.tsx`) and account/history UI
+  (`Account.tsx`, `History.tsx`, `SavedResult.tsx`) — sign up/in, save
+  an assessment's result as a frozen snapshot, browse past
+  assessments, revisit one without recalculating it.
+- ✅ Admin interface (`Admin.tsx`, gated on `profile.role === 'admin'`)
+  — add new emission-factor versions (never overwrites, always
+  supersedes), view reward policies, view the audit log.
+- ✅ Green Missions + EcoCoins UI (`Missions.tsx`) — join a mission,
+  submit an estimate for review, see approved EcoCoins balance; coins
+  are explicitly labelled as platform rewards, not carbon credits.
+- ✅ CSV export (`src/lib/exportCsv.ts`), wired into both the live
+  results page and saved/historical results.
+- ✅ Routing uses `HashRouter`, not `BrowserRouter` — see the comment
+  in `src/main.tsx` for why (GitHub Pages has no SPA fallback, so a
+  direct link to a client-side route would 404 under `BrowserRouter`).
+- The app still runs fully with **no Supabase project connected** —
+  the calculator, questionnaires, and results work standalone; only
+  persistence/auth/admin/missions show an informational "not
+  connected yet" state (verified end-to-end, zero console errors).
 
 Not yet built (tracked as follow-up work):
 
-- Business/MSME, Campus, and Event questionnaires (Scope 1/2/3
-  category selection, org-level data).
-- Supabase auth + save/load assessments in the UI (the schema and
-  client wrapper are ready; the UI still only holds an in-progress
-  assessment in `sessionStorage`).
-- Admin interface for managing emission factors/categories.
-- EcoCoins and Green Missions UI (ledger/tables exist; no screens yet).
-- PDF/CSV export.
-- Automated deployment (currently a manual build-and-copy step).
+- PDF export (CSV is done; PDF is not).
+- Standalone API documentation beyond this README and the SQL
+  migration comments (the "API" here is direct Supabase table/RPC
+  access under RLS, not a separate HTTP service).
+- Automated deployment (currently a manual build-and-copy step, see
+  below).
+- Live validation against a real Supabase project (structurally
+  verified via TypeScript + the migrations; not yet run against an
+  actual Supabase instance, since none exists in this environment).
 
 ## Before production
 

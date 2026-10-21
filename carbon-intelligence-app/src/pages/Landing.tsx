@@ -19,19 +19,19 @@ const USER_TYPES: { type: UserType; title: string; description: string; availabl
     type: 'business',
     title: 'Business or MSME',
     description: 'Scope 1, 2, and configurable Scope 3 categories.',
-    available: false,
+    available: true,
   },
   {
     type: 'campus',
     title: 'Campus or institution',
     description: 'Multi-building, multi-department reporting.',
-    available: false,
+    available: true,
   },
   {
     type: 'event',
     title: 'Event organizer',
     description: 'A single event\'s footprint, start to finish.',
-    available: false,
+    available: true,
   },
 ]
 

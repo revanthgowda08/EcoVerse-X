@@ -150,12 +150,130 @@ export const QUESTIONNAIRES: Record<UserType, QuestionnaireSection[]> = {
     },
   ],
 
-  // Business/campus/event questionnaires are scaffolded for a follow-up
-  // iteration (Scope 1/2/3 category selection, org-level data) — not
-  // built out in this pass.
-  business: [],
-  campus: [],
-  event: [],
+  business: [
+    {
+      id: 'scope2-electricity',
+      title: 'Scope 2 — Purchased electricity',
+      fields: [{ category: 'electricity.grid', label: 'Electricity purchased (all sites)', unit: 'kWh' }],
+    },
+    {
+      id: 'scope1-stationary',
+      title: 'Scope 1 — On-site fuel combustion',
+      description: 'Backup generators, boilers, or other stationary equipment you own or control.',
+      fields: [
+        { category: 'stationary.fuel.diesel', label: 'Diesel (generators, boilers, etc.)', unit: 'L' },
+        { category: 'stationary.fuel.lpg', label: 'LPG (generators, boilers, etc.)', unit: 'kg' },
+      ],
+    },
+    {
+      id: 'scope1-fleet',
+      title: 'Scope 1 — Company-owned vehicles',
+      fields: [
+        { category: 'transport.fuel.petrol', label: 'Petrol (company fleet)', unit: 'L' },
+        { category: 'transport.fuel.diesel', label: 'Diesel (company fleet)', unit: 'L' },
+        { category: 'transport.fuel.cng', label: 'CNG (company fleet)', unit: 'kg' },
+      ],
+    },
+    {
+      id: 'scope3-travel',
+      title: 'Scope 3 — Business travel',
+      description: 'A configurable Scope 3 category — include the ones relevant to your business.',
+      fields: [
+        { category: 'transport.air.domestic', label: 'Domestic flights (business travel)', unit: 'passenger-km' },
+        { category: 'transport.air.international', label: 'International flights (business travel)', unit: 'passenger-km' },
+        { category: 'transport.public.rail', label: 'Rail travel (business travel)', unit: 'passenger-km' },
+      ],
+    },
+    {
+      id: 'scope3-waste',
+      title: 'Scope 3 — Waste',
+      fields: [{ category: 'waste.landfill.mixed', label: 'Mixed waste to landfill', unit: 'kg' }],
+    },
+  ],
+
+  campus: [
+    {
+      id: 'scope2-electricity',
+      title: 'Scope 2 — Purchased electricity',
+      fields: [{ category: 'electricity.grid', label: 'Electricity purchased (all buildings)', unit: 'kWh' }],
+    },
+    {
+      id: 'scope1-cooking',
+      title: 'Scope 1 — Cooking fuel (canteens/hostels)',
+      fields: [
+        {
+          category: 'cooking',
+          label: 'Primary cooking fuel',
+          unit: 'kg',
+          options: [
+            { value: 'lpg', label: 'LPG cylinder', category: 'cooking.lpg', unit: 'kg' },
+            { value: 'png', label: 'Piped natural gas (PNG)', category: 'cooking.png', unit: 'm3' },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'scope1-stationary',
+      title: 'Scope 1 — Backup generators',
+      fields: [{ category: 'stationary.fuel.diesel', label: 'Diesel (backup generators)', unit: 'L' }],
+    },
+    {
+      id: 'scope1-fleet',
+      title: 'Scope 1 — Institution-owned vehicles',
+      fields: [
+        { category: 'transport.fuel.diesel', label: 'Diesel (owned buses/vehicles)', unit: 'L' },
+        { category: 'transport.fuel.petrol', label: 'Petrol (owned vehicles)', unit: 'L' },
+      ],
+    },
+    {
+      id: 'scope3-commute',
+      title: 'Scope 3 — Staff/student commute (estimate)',
+      description: 'A configurable Scope 3 category — a simplified proxy, not a full commute survey.',
+      fields: [
+        { category: 'transport.public.bus', label: 'Bus travel (commute estimate)', unit: 'passenger-km' },
+        { category: 'transport.public.rail', label: 'Rail travel (commute estimate)', unit: 'passenger-km' },
+      ],
+    },
+    {
+      id: 'scope3-waste',
+      title: 'Scope 3 — Waste',
+      fields: [{ category: 'waste.landfill.mixed', label: 'Mixed waste to landfill', unit: 'kg' }],
+    },
+  ],
+
+  event: [
+    {
+      id: 'scope2-electricity',
+      title: 'Scope 2 — Venue electricity',
+      description: 'For the duration of the event only.',
+      fields: [{ category: 'electricity.grid', label: 'Electricity used (event duration)', unit: 'kWh' }],
+    },
+    {
+      id: 'scope1-generators',
+      title: 'Scope 1 — Generators',
+      fields: [{ category: 'stationary.fuel.diesel', label: 'Diesel (event generators)', unit: 'L' }],
+    },
+    {
+      id: 'scope3-attendee-travel',
+      title: 'Scope 3 — Attendee travel (estimate)',
+      description: 'A configurable Scope 3 category — estimate total attendee travel, not individual trips.',
+      fields: [
+        { category: 'transport.air.domestic', label: 'Domestic flights (attendees, total)', unit: 'passenger-km' },
+        {
+          category: 'transport.air.international',
+          label: 'International flights (attendees, total)',
+          unit: 'passenger-km',
+        },
+        { category: 'transport.public.rail', label: 'Rail travel (attendees, total)', unit: 'passenger-km' },
+        { category: 'transport.public.bus', label: 'Bus/car travel (attendees, total)', unit: 'passenger-km' },
+      ],
+    },
+    {
+      id: 'scope3-waste',
+      title: 'Scope 3 — Event waste',
+      fields: [{ category: 'waste.landfill.mixed', label: 'Mixed waste to landfill', unit: 'kg' }],
+    },
+  ],
 }
 
 /** Every questionnaire slot for this user type, each listing every

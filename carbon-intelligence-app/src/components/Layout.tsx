@@ -1,14 +1,20 @@
 import type { ReactNode } from 'react'
-import { NavLink } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
+import { useAuth } from '../state/authStore'
 
 export function Layout({ children }: { children: ReactNode }) {
+  const { configured, user } = useAuth()
+
   return (
     <>
       <header className="app-header">
-        <a className="app-brand" href="/">
+        {/* router Link (stays in the app) — distinct from the plain
+            <a href="/"> "Back to Ecoverse" link below, which deliberately
+            leaves the app for the main site's actual domain root */}
+        <Link className="app-brand" to="/">
           <span className="app-brand-mark">ECO</span>
           <span>Carbon Intelligence</span>
-        </a>
+        </Link>
         <nav className="app-nav">
           <NavLink to="/" end className={({ isActive }) => (isActive ? 'active' : '')}>
             Start
@@ -16,6 +22,14 @@ export function Layout({ children }: { children: ReactNode }) {
           <NavLink to="/methodology" className={({ isActive }) => (isActive ? 'active' : '')}>
             Methodology
           </NavLink>
+          <NavLink to="/missions" className={({ isActive }) => (isActive ? 'active' : '')}>
+            Missions
+          </NavLink>
+          {configured && (
+            <NavLink to={user ? '/history' : '/account'} className={({ isActive }) => (isActive ? 'active' : '')}>
+              {user ? 'My assessments' : 'Sign in'}
+            </NavLink>
+          )}
           <a href="/">Back to Ecoverse</a>
         </nav>
       </header>
