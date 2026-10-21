@@ -76,6 +76,24 @@ India grid factor's year-to-year drift, the diet factors' UK-vs-India
 mismatch). Do not present results from this tool as certified until
 that review happens.
 
+A web-search-based re-verification pass (2026-10-21, `DATASET_VERSION
+'seed-2026.2'`) cross-checked every factor's citation against public
+secondary sources — it is explicitly **not** the qualified review above,
+only a sanity check, and every factor still carries `needsValidation:
+true`. It found and fixed two real issues: the India grid factor was
+corrected from 0.79 to 0.727 kgCO2e/kWh (CEA's published FY2023-24
+weighted-average figure), and the landfill-waste factor's citation was
+re-attributed from IPCC Vol. 5 (which doesn't actually publish a flat
+per-kg default — it requires a decay model) to DEFRA/DESNZ's household-
+residual-waste factor, which does, and already closely matched the
+existing number. It also flagged a methodology ambiguity worth the
+reviewer's attention: the flight factors here are deliberately CO2-only
+(excluding DEFRA's optional radiative-forcing uplift), which reads much
+lower than DEFRA's own "with RF" headline figures for the same routes —
+see the `uncertainty` notes on `transport.air.domestic`/`.international`
+for specifics. See each factor's `uncertainty` field for exactly what
+could and couldn't be corroborated this pass.
+
 ## Development
 
 ```bash

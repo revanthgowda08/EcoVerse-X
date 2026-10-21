@@ -20,25 +20,34 @@ import type { EmissionFactor } from '../calc/types'
  * This identifies the exact build of this file for reproducibility —
  * bump it whenever a factor value changes, never when only adding new
  * categories.
+ *
+ * Re-verification pass (2026-10-21): cross-checked every citation below
+ * against publicly available secondary sources (this session's web
+ * access could not reach the primary IPCC/CEA/DEFRA PDF documents
+ * directly to re-read their tables, only search-indexed summaries and
+ * third-party reproductions of them). This is NOT the qualified
+ * carbon-accounting review the PRD requires before production — it
+ * caught two concrete errors (below) and left the rest unchanged with
+ * added corroboration notes. `needsValidation` stays `true` throughout.
  */
-export const DATASET_VERSION = 'seed-2026.1'
+export const DATASET_VERSION = 'seed-2026.2'
 
 export const EMISSION_FACTORS: EmissionFactor[] = [
   {
     id: 'IN-ELEC-GRID-2026',
     category: 'electricity.grid',
     unit: 'kWh',
-    value: 0.79,
+    value: 0.727,
     outputUnit: 'kgCO2e',
     region: 'IN',
     scope: 'scope2',
     source: 'Central Electricity Authority (CEA), India',
     sourceUrl: 'https://cea.nic.in/cdm-co2-baseline-database/',
-    publication: 'CO2 Baseline Database for the Indian Power Sector, User Guide',
+    publication: 'CO2 Baseline Database for the Indian Power Sector, User Guide v20.0 (FY 2023-24 weighted-average emission factor adjusted for renewables)',
     effectiveYear: 2024,
     version: 1,
     uncertainty:
-      'All-India grid-average factor; CEA republishes this annually and the figure shifts with the generation mix. Confirm against the latest published edition before production use.',
+      'All-India grid-average factor; CEA republishes this annually (newer v22.0, FY 2025-26, already supersedes v20.0) and the figure shifts with the generation mix. Re-verification found the "weighted average, adjusted for renewables" variant reported at 0.727 tCO2/MWh for FY2023-24 (previously this entry held 0.79 — corrected). CEA also separately publishes a higher "Combined Margin" figure (~0.757) used for different accounting purposes (e.g. CDM baselines) — confirm which variant Ecoverse intends before production, and re-check both against the primary CEA PDF, which this pass could not fetch directly.',
     needsValidation: true,
   },
   {
@@ -54,7 +63,7 @@ export const EMISSION_FACTORS: EmissionFactor[] = [
     publication: '2006 IPCC Guidelines for National Greenhouse Gas Inventories, Vol. 2, Table 1.4',
     effectiveYear: 2006,
     version: 1,
-    uncertainty: 'IPCC default combustion factor; relatively stable across LPG blends.',
+    uncertainty: 'IPCC default combustion factor; relatively stable across LPG blends. The underlying 63.1 kgCO2/GJ (NCV basis) default this is derived from was corroborated against a secondary reproduction of the IPCC 2006 table during re-verification.',
     needsValidation: true,
   },
   {
@@ -87,7 +96,7 @@ export const EMISSION_FACTORS: EmissionFactor[] = [
     publication: '2006 IPCC Guidelines for National Greenhouse Gas Inventories, Vol. 2, Table 3.2.1 (motor gasoline default)',
     effectiveYear: 2006,
     version: 1,
-    uncertainty: 'IPCC default combustion factor, CO2 only (excludes CH4/N2O). Applies per liter regardless of vehicle type (car, two-wheeler, etc).',
+    uncertainty: 'IPCC default combustion factor, CO2 only (excludes CH4/N2O). Applies per liter regardless of vehicle type (car, two-wheeler, etc). The underlying 69.3 kgCO2/GJ default is a well-known, frequently-cited IPCC 2006 figure; re-verification could not re-fetch the primary PDF table this pass to confirm it directly — do so before production.',
     needsValidation: true,
   },
   {
@@ -103,7 +112,7 @@ export const EMISSION_FACTORS: EmissionFactor[] = [
     publication: '2006 IPCC Guidelines for National Greenhouse Gas Inventories, Vol. 2, Table 3.2.1 (diesel/gas oil default)',
     effectiveYear: 2006,
     version: 1,
-    uncertainty: 'IPCC default combustion factor, CO2 only. Applies per liter regardless of vehicle type.',
+    uncertainty: 'IPCC default combustion factor, CO2 only. Applies per liter regardless of vehicle type. The underlying 74.1 kgCO2/GJ default is a well-known, frequently-cited IPCC 2006 figure; re-verification could not re-fetch the primary PDF table this pass to confirm it directly — do so before production.',
     needsValidation: true,
   },
   {
@@ -170,7 +179,7 @@ export const EMISSION_FACTORS: EmissionFactor[] = [
     effectiveYear: 2024,
     version: 1,
     uncertainty:
-      'UK average-occupancy figure used as a global fallback; actual value depends heavily on vehicle type, route, and occupancy. No India-specific public dataset identified yet — validate before production use.',
+      'UK average-occupancy figure used as a global fallback; actual value depends heavily on vehicle type, route, and occupancy. No India-specific public dataset identified yet — validate before production use. Re-verification corroborated this against a secondary source citing ~0.102 for the 2024 DEFRA/DESNZ average local bus factor — close match.',
     needsValidation: true,
   },
   {
@@ -187,7 +196,7 @@ export const EMISSION_FACTORS: EmissionFactor[] = [
     effectiveYear: 2024,
     version: 1,
     uncertainty:
-      'UK average figure used as a global fallback pending an Indian Railways-specific factor. Electrified-vs-diesel traction mix materially changes this — validate before production use.',
+      'UK average figure used as a global fallback pending an Indian Railways-specific factor. Electrified-vs-diesel traction mix materially changes this — validate before production use. Re-verification corroborated this exactly against a secondary source citing 0.035 for the 2024 DEFRA/DESNZ national rail factor.',
     needsValidation: true,
   },
   {
@@ -203,7 +212,8 @@ export const EMISSION_FACTORS: EmissionFactor[] = [
     publication: 'UK Government GHG Conversion Factors for Company Reporting (domestic flight, average passenger, per passenger-km)',
     effectiveYear: 2024,
     version: 1,
-    uncertainty: 'Short-haul domestic average; varies with aircraft load factor and sector length. Validate before production use.',
+    uncertainty:
+      'Short-haul domestic average; varies with aircraft load factor and sector length. This figure is deliberately the CO2-only basis, excluding DEFRA/DESNZ\'s optional radiative-forcing (RF) uplift for non-CO2 aviation warming effects (contrails, NOx-induced ozone) — DEFRA\'s own headline "with RF" domestic figure runs noticeably higher (secondary sources put recent editions around 0.23-0.27 with RF vs. the ~0.14-0.16 without-RF range this entry sits in). Whether Ecoverse should report CO2-only or RF-inclusive aviation emissions is a methodology choice for the carbon-accounting reviewer to confirm, not just a factual correction — validate before production use.',
     needsValidation: true,
   },
   {
@@ -220,24 +230,24 @@ export const EMISSION_FACTORS: EmissionFactor[] = [
     effectiveYear: 2024,
     version: 1,
     uncertainty:
-      'CO2-only figure (excludes non-CO2 radiative forcing effects of aviation at altitude, which some methodologies include via a multiplier). Validate methodology choice before production use.',
+      'CO2-only figure (excludes non-CO2 radiative forcing effects of aviation at altitude, which some methodologies include via a multiplier). Same basis caveat as the domestic-flight entry above — see its note for the with-RF vs. without-RF gap found during re-verification. Validate methodology choice before production use.',
     needsValidation: true,
   },
   {
     id: 'GLOBAL-WASTE-LANDFILL-2026',
     category: 'waste.landfill.mixed',
     unit: 'kg',
-    value: 0.53,
+    value: 0.5,
     outputUnit: 'kgCO2e',
     region: 'GLOBAL',
     scope: 'scope3',
-    source: 'IPCC',
-    sourceUrl: 'https://www.ipcc-nggip.iges.or.jp/public/2006gl/',
-    publication: '2006 IPCC Guidelines for National Greenhouse Gas Inventories, Vol. 5, Waste (simplified default for mixed municipal solid waste to landfill)',
-    effectiveYear: 2006,
+    source: 'UK DEFRA/DESNZ',
+    sourceUrl: 'https://www.gov.uk/government/collections/government-conversion-factors-for-company-reporting',
+    publication: 'UK Government GHG Conversion Factors for Company Reporting (waste disposal, household residual waste to landfill, per kg)',
+    effectiveYear: 2024,
     version: 1,
     uncertainty:
-      'Highly dependent on waste composition, landfill management practice, and methane capture — this simplified default can be off by 2x or more for a specific site. Strongly recommend a locally-specific factor before production use.',
+      'Re-verification correction: this entry previously cited "2006 IPCC Guidelines Vol. 5, Waste" as its source, but that volume does not publish a single flat default factor for mixed waste to landfill — it specifies a first-order-decay model requiring site-specific inputs (degradable organic carbon, methane correction factor, etc.), not a table lookup. Re-sourced to DEFRA/DESNZ\'s published household-residual-waste-to-landfill factor (~0.497-0.5 kgCO2e/kg in recent editions), which is a genuine table value and closely matched this entry\'s existing number. Still highly dependent on waste composition, landfill management practice, and methane capture — a locally-specific factor is strongly recommended before production use, and "household residual" may not represent business/campus/event mixed waste streams well.',
     needsValidation: true,
   },
   {
@@ -254,7 +264,7 @@ export const EMISSION_FACTORS: EmissionFactor[] = [
     effectiveYear: 2014,
     version: 1,
     uncertainty:
-      'UK-population dietary study, used here as a simplified diet-type proxy. Not India-specific — Indian dietary patterns and food-system emissions differ materially. Treat as illustrative only until replaced with regionally-appropriate data.',
+      'UK-population dietary study, used here as a simplified diet-type proxy. Not India-specific — Indian dietary patterns and food-system emissions differ materially. Treat as illustrative only until replaced with regionally-appropriate data. Re-verification corroborated this against secondary summaries of the paper (consistently describing vegan diets at "almost 3 kg CO2e/day") but could not re-fetch the primary paper\'s table to confirm the exact figure directly.',
     needsValidation: true,
   },
   {
@@ -302,7 +312,7 @@ export const EMISSION_FACTORS: EmissionFactor[] = [
     publication: '"Dietary greenhouse gas emissions of meat-eaters, fish-eaters, vegetarians and vegans in the UK", Climatic Change (2014)',
     effectiveYear: 2014,
     version: 1,
-    uncertainty: 'Same UK-study caveat as the vegan diet factor above. "High meat" = above-average meat consumption (>100g/day) in the source study.',
+    uncertainty: 'Same UK-study caveat as the vegan diet factor above. "High meat" = above-average meat consumption (>100g/day) in the source study. Re-verification corroborated this against secondary summaries consistently describing high-meat diets at "over 7 kg CO2e/day".',
     needsValidation: true,
   },
 ]
