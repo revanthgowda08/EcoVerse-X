@@ -160,7 +160,7 @@
 
 .field-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 140px 90px;
+  grid-template-columns: minmax(0, 1fr) 170px 90px;
   gap: 12px;
   align-items: center;
   padding: 12px 0;
@@ -228,9 +228,33 @@
   font: inherit;
 }
 
+.field-row input.invalid {
+  border-color: var(--danger);
+  outline: 2px solid transparent;
+}
+
+.field-error {
+  grid-column: 1 / -1;
+  font-size: 0.78rem;
+  color: var(--danger);
+  margin-top: -4px;
+}
+
 .field-unit {
   font-size: 0.82rem;
   color: var(--soft-sage);
+}
+
+.field-unit-solo {
+  grid-column: 3;
+}
+
+/* Without a <select> sibling to share row 1 with, the quantity input
+   should take the roomier middle column (not the narrow unit column it
+   falls into by default once there's no select item ahead of it in the
+   grid's auto-placement order). */
+.field-input-solo {
+  grid-column: 2;
 }
 
 .assessment-actions {
@@ -422,9 +446,30 @@
 }
 
 @media (max-width: 640px) {
+  .app-header {
+    flex-wrap: wrap;
+    row-gap: 10px;
+  }
+
+  .app-nav {
+    width: 100%;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 0.82rem;
+  }
+
   .field-row {
     grid-template-columns: 1fr;
     gap: 6px;
+  }
+
+  /* Without these resets, the explicit column placements above (needed
+     for the desktop 3-column grid) fight the single-column mobile
+     layout and pull elements back onto each other's rows instead of
+     stacking cleanly. */
+  .field-unit-solo,
+  .field-input-solo {
+    grid-column: auto;
   }
 }
 

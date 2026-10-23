@@ -4,12 +4,25 @@ import { useAssessment } from '../state/assessmentStore'
 import { QUESTIONNAIRES } from '../lib/data/category-manifest'
 import type { CategoryField } from '../lib/data/category-manifest'
 
+// A quantity the engine would reject outright (negative, NaN, infinite).
+// Checked here too so the problem surfaces immediately next to the field
+// that caused it, rather than only showing up as a cryptic "Invalid
+// value" status pill on the results page with no way to tell which
+// answer needs fixing.
+function invalidQuantityReason(quantity: number): string | null {
+  if (!Number.isFinite(quantity)) return 'Enter a regular number.'
+  if (quantity < 0) return "Can't be negative — enter 0 or more."
+  return null
+}
+
 function FieldRow({ field }: { field: CategoryField }) {
   const { answers, setAnswer, clearAnswer } = useAssessment()
   const answer = answers[field.category]
+  const inputId = `field-${field.category}`
 
   const selectedOption = field.options?.find((o) => o.category === answer?.resolvedCategory)
   const unit = field.options ? selectedOption?.unit : field.unit
+  const errorReason = answer?.quantity != null ? invalidQuantityReason(answer.quantity) : null
 
   function handleOptionChange(optionCategory: string) {
     const option = field.options?.find((o) => o.category === optionCategory)
@@ -37,7 +50,9 @@ function FieldRow({ field }: { field: CategoryField }) {
   return (
     <div className="field-row">
       <div className="field-label-wrap">
-        <span className="field-label">{field.label}</span>
+        <label className="field-label" htmlFor={inputId}>
+          {field.label}
+        </label>
         {field.helpText && (
           <span className="field-tooltip" tabIndex={0}>
             i<span className="tooltip-text">{field.helpText}</span>
@@ -45,10 +60,11 @@ function FieldRow({ field }: { field: CategoryField }) {
         )}
       </div>
 
-      {field.options ? (
+      {field.options && (
         <select
           value={answer?.resolvedCategory ?? ''}
           onChange={(e) => handleOptionChange(e.target.value)}
+          aria-label={`${field.label} — choose type`}
         >
           <option value="" disabled>
             Choose...
@@ -59,22 +75,27 @@ function FieldRow({ field }: { field: CategoryField }) {
             </option>
           ))}
         </select>
-      ) : (
-        <span />
       )}
 
       <input
+        id={inputId}
         type="number"
         min={0}
         step="any"
-        placeholder="Not sure? Leave blank"
+        placeholder="Skip if unsure"
         value={answer?.quantity ?? ''}
         onChange={(e) => handleQuantityChange(e.target.value)}
         disabled={field.options ? !answer?.resolvedCategory : false}
+        className={`${field.options ? '' : 'field-input-solo '}${errorReason ? 'invalid' : ''}`.trim() || undefined}
+        aria-invalid={errorReason ? true : undefined}
+        aria-describedby={errorReason ? `${inputId}-error` : undefined}
       />
-      <span className="field-unit" style={{ gridColumn: field.options ? undefined : '3' }}>
-        {unit ?? ''}
-      </span>
+      <span className={`field-unit${field.options ? '' : ' field-unit-solo'}`}>{unit ?? ''}</span>
+      {errorReason && (
+        <span className="field-error" id={`${inputId}-error`} role="alert">
+          {errorReason}
+        </span>
+      )}
     </div>
   )
 }
