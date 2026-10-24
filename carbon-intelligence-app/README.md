@@ -50,18 +50,45 @@ This is a working foundation, not the complete PRD. Built so far:
   direct link to a client-side route would 404 under `BrowserRouter`).
 - ✅ API reference (`docs/API.md`) — the Supabase table/RLS/RPC surface
   this app calls "the API" (there is no separate HTTP service).
-- The app still runs fully with **no Supabase project connected** —
-  the calculator, questionnaires, and results work standalone; only
-  persistence/auth/admin/missions show an informational "not
-  connected yet" state (verified end-to-end, zero console errors).
+- ✅ **Connected to a live Supabase project** (`ecoverse-carbon-intelligence`,
+  `ap-south-1`) — all 7 migrations applied, 17 emission factors seeded,
+  RLS verified table-by-table, security advisors re-checked clean. The
+  app still runs fully with no Supabase project configured too (set
+  `VITE_SUPABASE_URL`/`VITE_SUPABASE_ANON_KEY` to point it at a
+  different project, or unset them to go back to standalone mode) —
+  only persistence/auth/admin/missions degrade, never the calculator
+  itself.
+- Two real bugs found and fixed while connecting this for the first
+  time (not found by reading the code alone — only by tracing the
+  actual live path):
+  - `signUp()` never created a matching `profiles` row, and `profiles`
+    has no client-side INSERT policy either — every real signup would
+    have hit a foreign-key violation the moment it tried to save an
+    assessment. Fixed with the standard Supabase `auth.users` trigger
+    (`0006_auto_create_profile.sql`).
+  - `award_ecocoins` doesn't verify that `p_source_id` is a real,
+    qualifying event — only that the reward policy is active and that
+    `(user, source_type, source_id)` hasn't been used. Nothing in the
+    shipped client calls it yet, so it was reachable but unused; revoked
+    `EXECUTE` from `anon`/`authenticated` until a service-role path
+    (e.g. an Edge Function, once the admin EcoCoins-review screen
+    exists) calls it after independently verifying the event —
+    never client code with a user-supplied `source_id`
+    (`0005_security_hardening.sql`).
 
 Not yet built (tracked as follow-up work):
 
 - Automated deployment (currently a manual build-and-copy step, see
   below).
-- Live validation against a real Supabase project (structurally
-  verified via TypeScript + the migrations; not yet run against an
-  actual Supabase instance, since none exists in this environment).
+- A full browser-based click-through of the live auth/save/admin flow
+  against the connected project — this session's sandbox has its
+  general network egress blocked for the project's own host (confirmed
+  via direct `curl`; the Supabase MCP tool's dedicated connection still
+  works), so verification here stopped at: migrations applied, schema
+  inspected, RLS/grants checked directly via SQL, and the trigger
+  confirmed attached — not an actual sign-up completed through a
+  browser. Test the real flow on the deployed site, where this
+  restriction won't apply.
 
 ## Before production
 
@@ -146,19 +173,35 @@ changed it in the meantime.
 
 ### Connecting Supabase
 
-The app runs fully without Supabase configured — the calculator works,
-results display, nothing crashes. Only persistence degrades
-(`src/lib/supabase.ts` exports `null` when unconfigured).
+**Already done for the deployed build** — it points at a live project
+(`ecoverse-carbon-intelligence`, `ap-south-1`) with all 7 migrations
+applied. The app still runs fully without Supabase configured at all —
+the calculator works, results display, nothing crashes. Only
+persistence degrades (`src/lib/supabase.ts` exports `null` when
+unconfigured).
+
+To point this at a **different** project instead:
 
 1. Create a Supabase project.
-2. Run the migrations in `supabase/migrations/` in order (via the
-   Supabase SQL editor, or `supabase db push` with the Supabase CLI).
+2. Run the migrations in `supabase/migrations/` **in order, all 7** —
+   `0001`-`0004` build the schema, `0005` and part of `0006` lock down
+   function privileges that are easy to get wrong (see their comments:
+   Postgres grants `EXECUTE` to `PUBLIC` by default, and Supabase
+   separately auto-grants `anon`/`authenticated` directly — revoking
+   from one without the other silently does nothing), and `0006`/`0007`
+   add the signup trigger and starter Missions content.
 3. Copy `.env.example` to `.env.local` and fill in
    `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` from
-   Project Settings → API.
+   Project Settings → API (the **publishable** key — `sb_publishable_...`
+   — not a service-role key, which must never go in client code or this
+   file).
 4. The first real user should be promoted to `role = 'admin'` directly
    in the `profiles` table (there is no self-service admin signup, by
    design).
+5. After applying migrations to any project, run the Supabase advisor
+   (`get_advisors` with the MCP tool, or Database → Advisors in the
+   dashboard) and confirm it's clean — this is how the two bugs above
+   were actually found, not from reading the SQL alone.
 
 ## Architecture notes
 
