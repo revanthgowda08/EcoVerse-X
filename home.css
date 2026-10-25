@@ -272,10 +272,22 @@ body.no-custom-cursor .cursor-ring {
    Default state (below) is a plain horizontally-scrollable track — fully
    usable with no JS at all. When home.js confirms GSAP + ScrollTrigger
    actually loaded, it adds .js-pinned-journey to the wrapper, which is
-   what turns this into the pinned/scrubbed cinematic version. Without
-   that class, .cine-journey-pin never gets its tall scroll-driver height
-   and the track keeps native overflow-x scrolling instead of relying on
-   a transform only JS would ever apply. */
+   what turns this into the pinned/scrubbed cinematic version.
+
+   Deliberately no explicit height is set for that pinned state (a
+   previous version hardcoded height: 420vh here). ScrollTrigger's
+   pin: true already inserts its own spacer sized exactly to the `end`
+   value computed in home.js's initJourney() — which depends on the
+   actual track width (device/content dependent), not a fixed guess.
+   Measured directly with real GSAP running locally: the hardcoded
+   420vh forced 3780px of layout height at a 900px-tall viewport, while
+   GSAP's own computed animation only needed 1292px to complete — the
+   other ~2488px was dead scroll space where the section sat visually
+   frozen (position: sticky holding it at the top long after the
+   scrub had finished), which is exactly a "lag / blank screen" report
+   reads as. Letting ScrollTrigger own the spacer removes the mismatch
+   entirely instead of re-guessing a new fixed number that would only
+   go stale again the next time the card count or copy length changes. */
 .cine-journey-pin {
   position: relative;
   background: var(--deep-forest);
@@ -314,7 +326,6 @@ body.no-custom-cursor .cursor-ring {
 }
 
 .js-pinned-journey.cine-journey-pin {
-  height: 420vh;
   padding: 0;
 }
 
@@ -638,10 +649,6 @@ body.no-custom-cursor .cursor-ring {
 
   .cine-summit-copy p {
     max-width: 100%;
-  }
-
-  .js-pinned-journey.cine-journey-pin {
-    height: 320vh;
   }
 }
 
