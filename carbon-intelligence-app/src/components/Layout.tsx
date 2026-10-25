@@ -7,6 +7,9 @@ export function Layout({ children }: { children: ReactNode }) {
 
   return (
     <>
+      <a className="skip-link" href="#main-content">
+        Skip to content
+      </a>
       <header className="app-header">
         {/* router Link (stays in the app) — distinct from the plain
             <a href="/"> "Back to Ecoverse" link below, which deliberately
@@ -33,7 +36,9 @@ export function Layout({ children }: { children: ReactNode }) {
           <a href="/">Back to Ecoverse</a>
         </nav>
       </header>
-      <main className="app-main">{children}</main>
+      <main className="app-main" id="main-content" tabIndex={-1}>
+        {children}
+      </main>
       <footer className="app-footer">
         Ecoverse Carbon Intelligence · Estimates based on versioned, sourced emission factors —
         see the <NavLink to="/methodology">Methodology</NavLink> page. ·{' '}

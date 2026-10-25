@@ -29,11 +29,21 @@ export function Methodology() {
       <div className="section-card">
         <h2>Calculation boundary</h2>
         <p className="section-description">
-          Individual and Household assessments currently cover: grid electricity (Scope 2);
-          cooking fuel, and owned-vehicle fuel (Scope 1); and public transport, air travel, diet,
-          and waste (Scope 3, as a simplified individual-level proxy — not a formal organizational
-          Scope 3 inventory). Business, Campus, and Event questionnaires with full Scope 1/2/3
-          category selection are planned for a follow-up release.
+          Individual and Household assessments cover grid electricity (Scope 2), cooking fuel and
+          owned-vehicle fuel (Scope 1), and public transport, air travel, diet, and waste (Scope 3,
+          as a simplified individual-level proxy — not a formal organizational Scope 3 inventory).
+          Business/MSME, Campus, and Event assessments add Scope 1 stationary combustion (backup
+          generators) and a fuller Scope 3 selection (business travel, commuting, waste) on top of
+          the same Scope 1/2 categories. See{' '}
+          <a
+            href="https://github.com/revanthgowda08/EcoVerse-X/blob/main/carbon-intelligence-app/docs/METHODOLOGY.md"
+            target="_blank"
+            rel="noopener"
+          >
+            the formal methodology document
+          </a>{' '}
+          for the full GHG Protocol scope mapping, boundary model, and an explicit statement of
+          what this tool is and isn't certified for.
         </p>
       </div>
 

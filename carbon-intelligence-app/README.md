@@ -50,6 +50,13 @@ This is a working foundation, not the complete PRD. Built so far:
   direct link to a client-side route would 404 under `BrowserRouter`).
 - ✅ API reference (`docs/API.md`) — the Supabase table/RLS/RPC surface
   this app calls "the API" (there is no separate HTTP service).
+- ✅ Formal methodology document (`docs/METHODOLOGY.md`) — maps every
+  calculation rule and category to the GHG Protocol's Scope 1/2/3
+  definitions, states the organizational/operational boundary model,
+  and gives an explicit compliance-posture statement (what's and isn't
+  true to claim about this tool's certification status) — written for
+  a reviewer or auditor, distinct from the in-app Methodology page's
+  end-user framing of the same underlying factor table.
 - ✅ **Connected to a live Supabase project** (`ecoverse-carbon-intelligence`,
   `ap-south-1`) — all 7 migrations applied, 17 emission factors seeded,
   RLS verified table-by-table, security advisors re-checked clean. The
@@ -120,6 +127,48 @@ lower than DEFRA's own "with RF" headline figures for the same routes —
 see the `uncertainty` notes on `transport.air.domestic`/`.international`
 for specifics. See each factor's `uncertainty` field for exactly what
 could and couldn't be corroborated this pass.
+
+## Infrastructure notes
+
+Ran the connected Supabase project through its own performance advisor
+(Database → Advisors, or `get_advisors` with the MCP tool) and found
+three categories of finding:
+
+- **Fixed** (`supabase/migrations/0008_performance_hardening.sql`):
+  every RLS policy that called `auth.uid()` directly was rewritten to
+  `(select auth.uid())` — semantically identical, but lets Postgres
+  evaluate it once per query instead of once per row; and ten foreign
+  key columns that had no covering index now do.
+- **Deferred, on purpose:** several tables have an owner-scoped `for
+  all` policy plus a separate admin/org-admin `for select` policy,
+  which Postgres evaluates as multiple permissive policies OR'd
+  together rather than one combined policy (the advisor's
+  `multiple_permissive_policies` finding, ~60 rows once multiplied
+  across Postgres's internal roles, really ~12 distinct cases).
+  Correct either way, just not maximally efficient at high query
+  volume. Consolidating each pair means splitting every `for all`
+  policy into per-command policies first — real surgery on the
+  access-control model across 8 tables — deferred rather than risked
+  without a way to browser-test the result end to end (see the
+  Supabase connection note above on this session's network
+  restriction).
+- **Not a real issue:** `unused_index` findings on every index this
+  project has — expected noise for a brand-new project with no query
+  history yet; these are exactly the columns the application's own
+  queries filter on (`user_id`, `assessment_id`, etc.) and will show as
+  used once real traffic exists.
+
+**Free tier.** This project runs on Supabase's free tier, which
+auto-pauses after a period of inactivity and carries no uptime SLA —
+fine for evaluation, not for an actual government/commercial deployment
+depending on it being reachable. Upgrading is a real, recurring cost
+and an explicit decision for whoever owns the Supabase billing account,
+not something to change unilaterally.
+
+**Backups.** The free tier does not include point-in-time recovery;
+only a paid plan's daily backups (or PITR on a higher tier) would
+protect against data loss, not application-level factors — this
+project currently has neither.
 
 ## Development
 

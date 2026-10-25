@@ -88,18 +88,34 @@ export function ResultsView({
       {chartData.length > 0 && (
         <div className="section-card">
           <h2>Main contributors</h2>
-          <ResponsiveContainer width="100%" height={Math.max(160, chartData.length * 44)}>
-            <BarChart data={chartData} layout="vertical" margin={{ left: 24, right: 24 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--line)" horizontal={false} />
-              <XAxis type="number" stroke="var(--soft-sage)" fontSize={12} />
-              <YAxis type="category" dataKey="name" stroke="var(--soft-sage)" fontSize={12} width={160} />
-              <ChartTooltip
-                contentStyle={{ background: 'var(--almost-black)', border: '1px solid var(--line)' }}
-                formatter={(value) => [`${value} kg CO2e`, 'Emissions']}
-              />
-              <Bar dataKey="kgCO2e" fill="var(--eco-electric)" radius={[0, 4, 4, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
+          {/* An SVG bar chart has no text content a screen reader can use —
+              role="img" + aria-label gives it one. The same numbers are
+              also in the fully accessible Category breakdown table below,
+              so this is a summary, not the only way to reach the data. */}
+          <div
+            role="img"
+            aria-label={`Main contributors, highest first: ${chartData.map((c) => `${c.name}, ${c.kgCO2e} kilograms CO2e`).join('; ')}.`}
+          >
+            {/* No aria-hidden here: Recharts renders a focusable SVG root
+                inside, and hiding an ancestor of a focusable element from
+                assistive tech is its own WCAG violation (confirmed via
+                axe-core's aria-hidden-focus rule) — worse than the
+                redundant-announcement risk it would have prevented. The
+                role="img" + aria-label on the wrapper above is the actual
+                accessible description. */}
+            <ResponsiveContainer width="100%" height={Math.max(160, chartData.length * 44)}>
+              <BarChart data={chartData} layout="vertical" margin={{ left: 24, right: 24 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--line)" horizontal={false} />
+                <XAxis type="number" stroke="var(--soft-sage)" fontSize={12} />
+                <YAxis type="category" dataKey="name" stroke="var(--soft-sage)" fontSize={12} width={160} />
+                <ChartTooltip
+                  contentStyle={{ background: 'var(--almost-black)', border: '1px solid var(--line)' }}
+                  formatter={(value) => [`${value} kg CO2e`, 'Emissions']}
+                />
+                <Bar dataKey="kgCO2e" fill="var(--eco-electric)" radius={[0, 4, 4, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       )}
 

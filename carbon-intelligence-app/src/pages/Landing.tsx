@@ -65,7 +65,7 @@ export function Landing() {
             disabled={!t.available}
             style={{ textAlign: 'left', width: '100%', font: 'inherit' }}
           >
-            <h3>{t.title}</h3>
+            <h2>{t.title}</h2>
             <p>{t.available ? t.description : `${t.description} — Coming soon.`}</p>
           </button>
         ))}
