@@ -39,8 +39,8 @@ export function assessmentResultToCsv(result: AssessmentResult): string {
   return lines.join('\n')
 }
 
-export function downloadCsv(filename: string, csv: string) {
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+export function downloadFile(filename: string, content: string, mimeType: string) {
+  const blob = new Blob([content], { type: mimeType })
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url
@@ -49,4 +49,8 @@ export function downloadCsv(filename: string, csv: string) {
   a.click()
   document.body.removeChild(a)
   URL.revokeObjectURL(url)
+}
+
+export function downloadCsv(filename: string, csv: string) {
+  downloadFile(filename, csv, 'text/csv;charset=utf-8;')
 }

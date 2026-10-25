@@ -11,6 +11,7 @@ import { History } from './pages/History'
 import { SavedResult } from './pages/SavedResult'
 import { Admin } from './pages/Admin'
 import { Missions } from './pages/Missions'
+import { PrivacyPolicy } from './pages/PrivacyPolicy'
 import './styles/app.css'
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
             <Route path="/history/:id" element={<SavedResult />} />
             <Route path="/missions" element={<Missions />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
           </Routes>
         </Layout>
       </AssessmentProvider>

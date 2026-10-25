@@ -36,7 +36,8 @@ export function Layout({ children }: { children: ReactNode }) {
       <main className="app-main">{children}</main>
       <footer className="app-footer">
         Ecoverse Carbon Intelligence · Estimates based on versioned, sourced emission factors —
-        see the <NavLink to="/methodology">Methodology</NavLink> page.
+        see the <NavLink to="/methodology">Methodology</NavLink> page. ·{' '}
+        <NavLink to="/privacy">Privacy policy</NavLink>
       </footer>
     </>
   )

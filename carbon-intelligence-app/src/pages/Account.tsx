@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../state/authStore'
+import { deleteMyAccount, exportMyData } from '../lib/accountData'
 
 export function Account() {
   const { configured, user, profile, loading, signIn, signUp, signOut } = useAuth()
@@ -11,6 +12,10 @@ export function Account() {
   const [error, setError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const [confirmNotice, setConfirmNotice] = useState(false)
+  const [exportState, setExportState] = useState<'idle' | 'working' | 'error'>('idle')
+  const [exportError, setExportError] = useState<string | null>(null)
+  const [deleteStep, setDeleteStep] = useState<'idle' | 'confirming' | 'working' | 'error'>('idle')
+  const [deleteError, setDeleteError] = useState<string | null>(null)
 
   if (!configured) {
     return (
@@ -29,6 +34,32 @@ export function Account() {
   if (loading) return null
 
   if (user) {
+    async function handleExport() {
+      if (!user) return
+      setExportState('working')
+      setExportError(null)
+      const { error } = await exportMyData(user.id)
+      if (error) {
+        setExportState('error')
+        setExportError(error)
+        return
+      }
+      setExportState('idle')
+    }
+
+    async function handleDelete() {
+      setDeleteStep('working')
+      setDeleteError(null)
+      const { error } = await deleteMyAccount()
+      if (error) {
+        setDeleteStep('error')
+        setDeleteError(error)
+        return
+      }
+      await signOut()
+      navigate('/')
+    }
+
     return (
       <div className="page-intro">
         <p className="eyebrow">Account</p>
@@ -46,6 +77,44 @@ export function Account() {
           <button type="button" className="button secondary" onClick={() => signOut()}>
             Sign out
           </button>
+        </div>
+
+        <div className="section-card" style={{ marginTop: 24 }}>
+          <h2>Your data</h2>
+          <p className="section-description">
+            See the <a href="#/privacy">privacy policy</a> for what's stored and why. Both actions
+            below are self-service — nothing here requires contacting anyone.
+          </p>
+          <div className="assessment-actions" style={{ justifyContent: 'flex-start' }}>
+            <button type="button" className="button secondary" onClick={handleExport} disabled={exportState === 'working'}>
+              {exportState === 'working' ? 'Preparing export…' : 'Export my data'}
+            </button>
+            {deleteStep === 'idle' && (
+              <button type="button" className="button secondary" onClick={() => setDeleteStep('confirming')}>
+                Delete my account
+              </button>
+            )}
+          </div>
+          {exportState === 'error' && <div className="banner warning">Could not export: {exportError}</div>}
+
+          {deleteStep === 'confirming' && (
+            <div className="banner warning" style={{ marginTop: 14 }}>
+              <strong>This permanently deletes your account and every assessment, result, and
+              mission record tied to it. There is no undo and no grace period.</strong>
+              <div className="assessment-actions" style={{ justifyContent: 'flex-start', marginTop: 10 }}>
+                <button type="button" className="button secondary" onClick={handleDelete}>
+                  Yes, permanently delete everything
+                </button>
+                <button type="button" className="button secondary" onClick={() => setDeleteStep('idle')}>
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
+          {deleteStep === 'working' && <div className="banner info" style={{ marginTop: 14 }}>Deleting…</div>}
+          {deleteStep === 'error' && (
+            <div className="banner warning" style={{ marginTop: 14 }}>Could not delete account: {deleteError}</div>
+          )}
         </div>
       </div>
     )
