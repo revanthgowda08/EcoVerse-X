@@ -6,7 +6,7 @@
     <title>Connect | Ecoverse</title>
     <meta
       name="description"
-      content="Two ways in — partner with Ecoverse as a brand, NGO, producer collective, or institution, or just get in touch. We read everything."
+      content="Three ways in — partner with Ecoverse as a brand, NGO, producer collective, or institution, join the closed testing of the app, or just get in touch. We read everything."
     />
     <meta name="author" content="TLNB Services LLP" />
     <link rel="canonical" href="https://ecoverseearth.com/connect.html" />
@@ -17,7 +17,7 @@
     <meta property="og:title" content="Connect | Ecoverse" />
     <meta
       property="og:description"
-      content="Two ways in — pick the one that fits. Partner with Ecoverse, or just say hello."
+      content="Three ways in — partner with Ecoverse, join the closed testing, or just say hello."
     />
     <meta property="og:type" content="website" />
     <meta
@@ -28,7 +28,7 @@
     <meta name="twitter:title" content="Connect | Ecoverse" />
     <meta
       name="twitter:description"
-      content="Two ways in — pick the one that fits. Partner with Ecoverse, or just say hello."
+      content="Three ways in — partner with Ecoverse, join the closed testing, or just say hello."
     />
     <meta
       name="twitter:image"
@@ -53,7 +53,7 @@
             "@id": "https://ecoverseearth.com/connect.html",
             "url": "https://ecoverseearth.com/connect.html",
             "name": "Connect | Ecoverse",
-            "description": "Two ways in — partner with Ecoverse as a brand, NGO, producer collective, or institution, or just get in touch.",
+            "description": "Three ways in — partner with Ecoverse as a brand, NGO, producer collective, or institution, join the closed testing of the app, or just get in touch.",
             "isPartOf": { "@id": "https://ecoverseearth.com/#website" },
             "about": { "@id": "https://ecoverseearth.com/#organization" }
           },
@@ -89,9 +89,59 @@
       <section class="connect-section page-top" id="connect" aria-label="Contact and collaboration">
         <div class="connect-intro">
           <p class="section-label">Let's Talk</p>
-          <h2>Two ways in — pick the one that fits.</h2>
+          <h2>Three ways in — pick the one that fits.</h2>
         </div>
         <div class="connect-grid">
+          <form
+            class="connect-form"
+            action="https://formspree.io/f/mkjwqwen"
+            method="POST"
+          >
+            <p class="form-tag">Closed Testing</p>
+            <h3>Join the testing</h3>
+            <p class="form-hint">
+              Get early access to the Ecoverse app before public launch.
+              Spots are limited — we'll reach out by email or phone once
+              a slot opens up.
+            </p>
+            <input type="hidden" name="_subject" value="New Closed Testing Signup — Ecoverse" />
+            <input type="text" name="_gotcha" style="display: none" tabindex="-1" autocomplete="off" />
+            <label>
+              Name
+              <input type="text" name="name" required autocomplete="name" />
+            </label>
+            <label>
+              Email
+              <input type="email" name="email" required autocomplete="email" />
+            </label>
+            <label>
+              Phone
+              <input type="tel" name="phone" required autocomplete="tel" />
+            </label>
+            <label>
+              Which platform?
+              <select name="platform">
+                <option>Android</option>
+                <option>iOS</option>
+                <option>Web</option>
+                <option>No preference</option>
+              </select>
+            </label>
+            <label>
+              Why do you want in? <span class="label-optional">(optional)</span>
+              <textarea name="message" rows="3"></textarea>
+            </label>
+            <p class="form-hint" style="font-size: 0.82rem; margin: -4px 0 0">
+              By submitting, you agree we can contact you by email or phone
+              about the closed testing program only — nothing else.
+            </p>
+            <button class="button primary" type="submit">
+              <i data-lucide="flask-conical"></i>
+              Request testing access
+            </button>
+            <p class="form-status" role="status" aria-live="polite"></p>
+          </form>
+
           <form
             class="connect-form"
             action="https://formspree.io/f/mkjwqwen"
