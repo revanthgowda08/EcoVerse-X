@@ -495,12 +495,16 @@ body.no-custom-cursor .cursor-ring {
   margin: 28px auto 0;
   max-width: 640px;
   padding: 28px;
-  border: 1px dashed rgba(139, 226, 138, 0.32);
+  border: 1px solid rgba(139, 226, 138, 0.32);
   border-radius: 10px;
   color: var(--soft-sage);
   font-size: 0.98rem;
   line-height: 1.7;
   animation: partners-pulse 4s ease-in-out infinite;
+}
+
+.cine-partners-placeholder p {
+  margin: 0 0 20px;
 }
 
 @keyframes partners-pulse {
