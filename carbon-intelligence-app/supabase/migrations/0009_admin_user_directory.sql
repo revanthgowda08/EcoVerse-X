@@ -1,23 +1,21 @@
--- Give admins a real "who signed up" view, and close a role-escalation
--- gap noticed while building it.
+-- Give admins a real "who signed up" view.
 --
--- 1. `profiles` never stored email or a signup display name — both live
---    only on `auth.users`, which client code can't query (no schema
---    grant), so the admin UI had nothing to list. Denormalize both onto
---    `profiles` at signup time, the same SECURITY DEFINER trigger path
---    0006 already uses for the row itself.
--- 2. The existing "users can update their own profile (not their role)"
---    policy's name overstates what it does: `with check (id = auth.uid())`
---    only confirms row ownership, not which columns changed — a
---    signed-in user could already set their own `role` to 'admin' via a
---    plain client-side update. 0002's comment flagged this as pending
---    ("added in a follow-up migration alongside the rest of the admin
---    tooling") — this is that migration. A BEFORE UPDATE trigger rejects
---    any role change made by a non-admin, regardless of which policy
---    let the UPDATE through.
--- 3. Admins also need to update *other* users' profiles (role changes
---    from the new admin UI) — add that policy; the self-update policy
---    stays for users editing their own display_name.
+-- `profiles` never stored email or a signup display name — both live
+-- only on `auth.users`, which client code can't query (no schema
+-- grant), so the admin UI had nothing to list. Denormalize both onto
+-- `profiles` at signup time, the same SECURITY DEFINER trigger path
+-- 0006 already uses for the row itself, with a backfill for rows
+-- created before this column existed.
+--
+-- Admins also need to update *other* users' profiles (role changes
+-- from the new admin UI) — add that policy; the existing self-update
+-- policy stays for users editing their own display_name. Role-change
+-- protection itself doesn't need touching here: 0004_functions.sql
+-- already put a BEFORE UPDATE trigger (prevent_self_role_escalation)
+-- on profiles blocking a non-admin from changing their own role or
+-- organization_id — confirmed live via pg_trigger before writing this,
+-- after an earlier version of this migration mistakenly added a second,
+-- less complete copy of that same protection.
 
 alter table profiles add column if not exists email text;
 
@@ -36,23 +34,6 @@ set email = auth_users.email
 from auth.users as auth_users
 where profiles.id = auth_users.id
   and profiles.email is null;
-
-create or replace function prevent_role_self_escalation() returns trigger as $$
-begin
-  if new.role is distinct from old.role and not is_admin() then
-    raise exception 'Only an admin can change a profile''s role.';
-  end if;
-  return new;
-end;
-$$ language plpgsql security definer set search_path = public, pg_temp;
-
-drop trigger if exists on_profile_role_change on profiles;
-create trigger on_profile_role_change
-  before update on profiles
-  for each row execute function prevent_role_self_escalation();
-
-revoke execute on function prevent_role_self_escalation() from public;
-revoke execute on function prevent_role_self_escalation() from anon, authenticated;
 
 create policy "admins can update any profile"
   on profiles for update
