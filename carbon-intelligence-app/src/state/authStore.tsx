@@ -4,9 +4,11 @@ import { isSupabaseConfigured, supabase } from '../lib/supabase'
 
 export interface Profile {
   id: string
+  email: string | null
   display_name: string | null
   role: 'user' | 'org_admin' | 'admin'
   organization_id: string | null
+  created_at?: string
 }
 
 interface AuthContextValue {
@@ -14,7 +16,7 @@ interface AuthContextValue {
   user: User | null
   profile: Profile | null
   loading: boolean
-  signUp: (email: string, password: string) => Promise<{ error: string | null }>
+  signUp: (email: string, password: string, displayName?: string) => Promise<{ error: string | null }>
   signIn: (email: string, password: string) => Promise<{ error: string | null }>
   signOut: () => Promise<void>
 }
@@ -52,7 +54,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     let cancelled = false
     supabase
       .from('profiles')
-      .select('id, display_name, role, organization_id')
+      .select('id, email, display_name, role, organization_id, created_at')
       .eq('id', session.user.id)
       .single()
       .then(({ data }) => {
@@ -69,9 +71,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       user: session?.user ?? null,
       profile,
       loading,
-      signUp: async (email, password) => {
+      signUp: async (email, password, displayName) => {
         if (!supabase) return { error: 'Supabase is not configured.' }
-        const { error } = await supabase.auth.signUp({ email, password })
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: displayName ? { data: { display_name: displayName } } : undefined,
+        })
         return { error: error?.message ?? null }
       },
       signIn: async (email, password) => {

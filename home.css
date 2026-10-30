@@ -481,6 +481,18 @@ body.no-custom-cursor .cursor-ring {
   transform: translateX(4px);
 }
 
+/* The live tool, not just a content page — spans the full row so it
+   reads as the destination the other four cards lead to, not a fifth
+   equal tile. */
+.cine-explore-card--featured {
+  grid-column: 1 / -1;
+  background: var(--dark-moss);
+}
+
+.cine-explore-card--featured:hover {
+  background: var(--natural-green);
+}
+
 /* ---------- partnerships placeholder ---------- */
 .cine-partners {
   text-align: center;

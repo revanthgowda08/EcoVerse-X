@@ -7,6 +7,7 @@ export function Account() {
   const { configured, user, profile, loading, signIn, signUp, signOut } = useAuth()
   const navigate = useNavigate()
   const [mode, setMode] = useState<'signIn' | 'signUp'>('signIn')
+  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -124,7 +125,8 @@ export function Account() {
     e.preventDefault()
     setError(null)
     setSubmitting(true)
-    const result = mode === 'signIn' ? await signIn(email, password) : await signUp(email, password)
+    const result =
+      mode === 'signIn' ? await signIn(email, password) : await signUp(email, password, name.trim() || undefined)
     setSubmitting(false)
     if (result.error) {
       setError(result.error)
@@ -150,6 +152,18 @@ export function Account() {
         <div className="banner info">Check your email to confirm your account, then sign in.</div>
       ) : (
         <form onSubmit={handleSubmit} className="section-card" style={{ display: 'grid', gap: 14, maxWidth: 420 }}>
+          {mode === 'signUp' && (
+            <label>
+              <div style={{ fontSize: '0.85rem', marginBottom: 4 }}>Name</div>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                autoComplete="name"
+                style={{ width: '100%', padding: '10px 12px', borderRadius: 6, border: '1px solid var(--line)' }}
+              />
+            </label>
+          )}
           <label>
             <div style={{ fontSize: '0.85rem', marginBottom: 4 }}>Email</div>
             <input

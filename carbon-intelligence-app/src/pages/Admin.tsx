@@ -20,6 +20,16 @@ interface AuditEntry {
   created_at: string
 }
 
+interface UserRow {
+  id: string
+  email: string | null
+  display_name: string | null
+  role: 'user' | 'org_admin' | 'admin'
+  organization_id: string | null
+  default_user_type: string | null
+  created_at: string
+}
+
 const emptyFactorDraft = {
   id: '',
   category: '',
@@ -41,6 +51,8 @@ export function Admin() {
   const [factors, setFactors] = useState<EmissionFactor[] | null>(null)
   const [policies, setPolicies] = useState<RewardPolicy[] | null>(null)
   const [auditLog, setAuditLog] = useState<AuditEntry[] | null>(null)
+  const [users, setUsers] = useState<UserRow[] | null>(null)
+  const [userRoleError, setUserRoleError] = useState<string | null>(null)
   const [draft, setDraft] = useState(emptyFactorDraft)
   const [formError, setFormError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
@@ -87,7 +99,24 @@ export function Admin() {
       .order('created_at', { ascending: false })
       .limit(25)
       .then(({ data }) => setAuditLog((data as AuditEntry[]) ?? []))
+    supabase
+      .from('profiles')
+      .select('id, email, display_name, role, organization_id, default_user_type, created_at')
+      .order('created_at', { ascending: false })
+      .then(({ data }) => setUsers((data as UserRow[]) ?? []))
   }, [isAdmin])
+
+  async function handleRoleChange(userId: string, role: UserRow['role']) {
+    if (!supabase) return
+    setUserRoleError(null)
+    const previous = users
+    setUsers((rows) => rows?.map((r) => (r.id === userId ? { ...r, role } : r)) ?? rows)
+    const { error } = await supabase.from('profiles').update({ role }).eq('id', userId)
+    if (error) {
+      setUserRoleError(error.message)
+      setUsers(previous)
+    }
+  }
 
   async function handleAddFactorVersion(e: React.FormEvent) {
     e.preventDefault()
@@ -162,7 +191,57 @@ export function Admin() {
   return (
     <div>
       <p className="eyebrow">Admin</p>
-      <h1>Emission factors, reward policies, and audit log</h1>
+      <h1>Registered users, emission factors, reward policies, and audit log</h1>
+
+      <div className="section-card">
+        <h2>Registered users ({users?.length ?? '…'})</h2>
+        <p className="section-description">
+          Everyone who has signed up. Role changes take effect immediately — an account can't
+          change its own role, so use this to promote or demote someone.
+        </p>
+        {users === null ? (
+          <p style={{ color: 'var(--soft-sage)' }}>Loading…</p>
+        ) : users.length === 0 ? (
+          <p style={{ color: 'var(--soft-sage)' }}>No one has signed up yet.</p>
+        ) : (
+          <div className="factor-table-wrap">
+            <table className="category-table">
+              <thead>
+                <tr>
+                  <th>Email</th>
+                  <th>Name</th>
+                  <th>Role</th>
+                  <th>Default type</th>
+                  <th>Joined</th>
+                </tr>
+              </thead>
+              <tbody>
+                {users.map((u) => (
+                  <tr key={u.id}>
+                    <td>{u.email ?? '—'}</td>
+                    <td>{u.display_name ?? '—'}</td>
+                    <td>
+                      <select
+                        value={u.role}
+                        disabled={u.id === user?.id}
+                        onChange={(e) => handleRoleChange(u.id, e.target.value as UserRow['role'])}
+                        title={u.id === user?.id ? "You can't change your own role" : undefined}
+                      >
+                        <option value="user">user</option>
+                        <option value="org_admin">org_admin</option>
+                        <option value="admin">admin</option>
+                      </select>
+                    </td>
+                    <td>{u.default_user_type ?? '—'}</td>
+                    <td>{new Date(u.created_at).toLocaleDateString()}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+        {userRoleError && <div className="banner warning" style={{ marginTop: 10 }}>Could not update role: {userRoleError}</div>}
+      </div>
 
       <div className="section-card">
         <h2>Add a new factor version</h2>
