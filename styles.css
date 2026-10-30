@@ -196,6 +196,17 @@ h2 {
   font-size: clamp(2.1rem, 4vw, 4.5rem);
 }
 
+/* These three sections use <h1> for document outline correctness (each
+   is the only top-level heading on its page) but were designed and
+   sized as the smaller "h2" intro treatment, not the full hero <h1>
+   size used by index.html/impact.html. Keep that visual size. */
+.intro-section h1,
+.loop-section h1,
+.connect-intro h1 {
+  max-width: none;
+  font-size: clamp(2.1rem, 4vw, 4.5rem);
+}
+
 h3 {
   margin: 0;
   font-size: 1.15rem;
@@ -409,8 +420,10 @@ h3 {
   color: var(--green-500);
 }
 
-.loop-steps h3 {
+.loop-steps h3,
+.loop-steps h2 {
   margin: 0 0 10px;
+  font-size: 1.15rem;
 }
 
 .loop-steps p {
@@ -650,7 +663,7 @@ h3 {
   color: var(--green-700);
 }
 
-.connect-form h3 {
+.connect-form h2 {
   margin: 0;
   font-family: "Lora", Georgia, serif;
   font-size: 1.4rem;
@@ -862,16 +875,16 @@ h3 {
   color: var(--green-700);
 }
 
-.article-card h3 {
+.article-card h2 {
   font-size: 1.3rem;
   line-height: 1.3;
 }
 
-.article-card h3 a {
+.article-card h2 a {
   text-decoration: none;
 }
 
-.article-card h3 a:hover {
+.article-card h2 a:hover {
   text-decoration: underline;
 }
 
@@ -1062,13 +1075,14 @@ h3 {
 .vision-media img,
 .hero-content,
 .launch-panel,
-.intro-section h2,
+.intro-section h1,
+.loop-section h1,
 .loop-section h2,
 .venture-intro h2,
 .worlds-section > div:first-child h2,
 .journal-hero h1,
 .article-header h1,
-.connect-intro h2,
+.connect-intro h1,
 .vision-copy h2,
 .intro-section .section-label,
 .loop-section .section-label,
