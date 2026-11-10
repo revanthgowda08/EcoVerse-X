@@ -3,20 +3,30 @@ export function PrivacyPolicy() {
     <div>
       <p className="eyebrow">Privacy</p>
       <h1>Privacy policy</h1>
-      <p style={{ color: 'var(--soft-sage)' }}>Last updated 2026-10-25.</p>
+      <p style={{ color: 'var(--soft-sage)' }}>Last updated 2026-11-10.</p>
 
       <div className="section-card">
         <h2>What this tool collects, and why</h2>
         <p>
-          The calculator itself needs no account and collects nothing beyond what stays in your own
-          browser for the length of your session — you can use it fully anonymously. An account is
-          only needed to save a result and revisit it later. If you create one, the following is
-          stored:
+          The calculator itself needs no account and, by default, collects nothing beyond what
+          stays in your own browser for the length of your session — you can use it fully
+          anonymously. An account is only needed to save a result and revisit it later. The one
+          exception is an optional prompt on the results screen: if you're not signed in, you can
+          choose to leave your email for a copy of your results. Nothing is sent unless you submit
+          that form yourself.
         </p>
         <ul>
           <li>
             <strong>Account:</strong> your email address and an encrypted password (Supabase Auth
             handles authentication; we never see or store your plaintext password).
+          </li>
+          <li>
+            <strong>Guest result opt-in:</strong> if you leave your email on the results screen
+            without signing in, we store that email, the name you optionally give, your selected
+            assessment type, region, reporting year, and total result — nothing else from that
+            session, and no account is created. These rows aren't tied to any login, so the
+            self-service export/delete tools below don't apply to them; see "Your rights" for how
+            to have one removed.
           </li>
           <li>
             <strong>Assessment data:</strong> the activity figures you enter (e.g. electricity
@@ -77,9 +87,10 @@ export function PrivacyPolicy() {
           </li>
         </ul>
         <p style={{ color: 'var(--soft-sage)', fontSize: '0.88rem' }}>
-          If you'd rather not use the self-service tools, you may still request access, correction,
-          or deletion by contacting the team through the main{' '}
-          <a href="/connect.html">Ecoverse Connect page</a>.
+          If you'd rather not use the self-service tools — or you left your email on the results
+          screen as a guest, which has no self-service option since there's no account to sign
+          into — you may request access, correction, or deletion by contacting the team through the
+          main <a href="/connect.html">Ecoverse Connect page</a>.
         </p>
       </div>
 

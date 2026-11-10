@@ -20,6 +20,17 @@ interface AuditEntry {
   created_at: string
 }
 
+interface GuestLead {
+  id: string
+  email: string
+  display_name: string | null
+  user_type: string
+  reporting_year: number
+  region: string
+  total_kgco2e: number
+  created_at: string
+}
+
 interface UserRow {
   id: string
   email: string | null
@@ -53,6 +64,7 @@ export function Admin() {
   const [auditLog, setAuditLog] = useState<AuditEntry[] | null>(null)
   const [users, setUsers] = useState<UserRow[] | null>(null)
   const [userRoleError, setUserRoleError] = useState<string | null>(null)
+  const [guestLeads, setGuestLeads] = useState<GuestLead[] | null>(null)
   const [draft, setDraft] = useState(emptyFactorDraft)
   const [formError, setFormError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
@@ -104,6 +116,11 @@ export function Admin() {
       .select('id, email, display_name, role, organization_id, default_user_type, created_at')
       .order('created_at', { ascending: false })
       .then(({ data }) => setUsers((data as UserRow[]) ?? []))
+    supabase
+      .from('guest_leads')
+      .select('id, email, display_name, user_type, reporting_year, region, total_kgco2e, created_at')
+      .order('created_at', { ascending: false })
+      .then(({ data }) => setGuestLeads((data as GuestLead[]) ?? []))
   }, [isAdmin])
 
   async function handleRoleChange(userId: string, role: UserRow['role']) {
@@ -241,6 +258,47 @@ export function Admin() {
           </div>
         )}
         {userRoleError && <div className="banner warning" style={{ marginTop: 10 }}>Could not update role: {userRoleError}</div>}
+      </div>
+
+      <div className="section-card">
+        <h2>Guest leads ({guestLeads?.length ?? '…'})</h2>
+        <p className="section-description">
+          People who used the calculator without creating an account and opted in to leave their
+          email for a copy of their results. Write-only from their side — this is the only place
+          these rows are ever read.
+        </p>
+        {guestLeads === null ? (
+          <p style={{ color: 'var(--soft-sage)' }}>Loading…</p>
+        ) : guestLeads.length === 0 ? (
+          <p style={{ color: 'var(--soft-sage)' }}>No opt-ins yet.</p>
+        ) : (
+          <div className="factor-table-wrap">
+            <table className="category-table">
+              <thead>
+                <tr>
+                  <th>Email</th>
+                  <th>Name</th>
+                  <th>Type</th>
+                  <th>Result</th>
+                  <th>Region</th>
+                  <th>Submitted</th>
+                </tr>
+              </thead>
+              <tbody>
+                {guestLeads.map((g) => (
+                  <tr key={g.id}>
+                    <td>{g.email}</td>
+                    <td>{g.display_name ?? '—'}</td>
+                    <td>{g.user_type}</td>
+                    <td>{(g.total_kgco2e / 1000).toFixed(2)} t CO₂e ({g.reporting_year})</td>
+                    <td>{g.region}</td>
+                    <td>{new Date(g.created_at).toLocaleDateString()}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
 
       <div className="section-card">

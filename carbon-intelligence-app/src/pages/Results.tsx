@@ -7,6 +7,7 @@ import { EMISSION_FACTORS } from '../lib/data/emission-factors'
 import { expectedSlotsFor } from '../lib/data/category-manifest'
 import { saveAssessment } from '../lib/persistAssessment'
 import { assessmentResultToCsv, downloadCsv } from '../lib/exportCsv'
+import { submitGuestLead } from '../lib/guestLeads'
 import { ResultsView } from '../components/ResultsView'
 
 export function Results() {
@@ -15,6 +16,10 @@ export function Results() {
   const { configured, user } = useAuth()
   const [saveState, setSaveState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
   const [saveError, setSaveError] = useState<string | null>(null)
+  const [guestEmail, setGuestEmail] = useState('')
+  const [guestName, setGuestName] = useState('')
+  const [guestLeadState, setGuestLeadState] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
+  const [guestLeadError, setGuestLeadError] = useState<string | null>(null)
 
   useEffect(() => {
     if (!userType) navigate('/')
@@ -42,6 +47,27 @@ export function Results() {
       return
     }
     setSaveState('saved')
+  }
+
+  async function handleGuestLeadSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    if (!result) return
+    setGuestLeadState('sending')
+    setGuestLeadError(null)
+    const { error } = await submitGuestLead({
+      email: guestEmail,
+      displayName: guestName,
+      userType: result.userType,
+      reportingYear: result.reportingYear,
+      region: result.region,
+      totalKgCO2e: result.totalKgCO2e,
+    })
+    if (error) {
+      setGuestLeadState('error')
+      setGuestLeadError(error)
+      return
+    }
+    setGuestLeadState('sent')
   }
 
   function handleExportCsv() {
@@ -82,12 +108,47 @@ export function Results() {
                   </button>
                 </>
               ) : (
-                <>
-                  <span>Sign in to save this assessment and view it later.</span>
-                  <button type="button" className="button secondary" onClick={() => navigate('/account')}>
-                    Sign in
-                  </button>
-                </>
+                <div style={{ display: 'grid', gap: 10, width: '100%' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+                    <span>Sign in to save this assessment and view it later.</span>
+                    <button type="button" className="button secondary" onClick={() => navigate('/account')}>
+                      Sign in
+                    </button>
+                  </div>
+                  {guestLeadState === 'sent' ? (
+                    <span style={{ fontSize: '0.9rem' }}>
+                      Sent — we've noted your result. No account was created.
+                    </span>
+                  ) : (
+                    <form
+                      onSubmit={handleGuestLeadSubmit}
+                      style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}
+                    >
+                      <span style={{ fontSize: '0.9rem' }}>Prefer not to sign in? Leave your email for a copy:</span>
+                      <input
+                        type="text"
+                        placeholder="Name (optional)"
+                        value={guestName}
+                        onChange={(e) => setGuestName(e.target.value)}
+                        style={{ padding: '8px 10px', borderRadius: 6, border: '1px solid var(--line)', maxWidth: 160 }}
+                      />
+                      <input
+                        type="email"
+                        required
+                        placeholder="you@example.com"
+                        value={guestEmail}
+                        onChange={(e) => setGuestEmail(e.target.value)}
+                        style={{ padding: '8px 10px', borderRadius: 6, border: '1px solid var(--line)', maxWidth: 220 }}
+                      />
+                      <button type="submit" className="button secondary" disabled={guestLeadState === 'sending'}>
+                        {guestLeadState === 'sending' ? 'Sending…' : 'Send me a copy'}
+                      </button>
+                      {guestLeadState === 'error' && (
+                        <span style={{ fontSize: '0.85rem' }}>Could not send: {guestLeadError}</span>
+                      )}
+                    </form>
+                  )}
+                </div>
               )}
             </div>
           )
